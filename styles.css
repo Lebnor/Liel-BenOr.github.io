@@ -299,12 +299,12 @@ header {
 }
 
 .greeting {
-  text-align: center;
-  font-size: var(--fs-h3);
-  color: var(--clr-accent);
-  margin-top: -2em;
-  margin-bottom: 4em;
-  /* text-shadow: 0 0 3px var(--clr-accent), 0 0 3px white; */
+    text-align: center;
+    font-size: var(--fs-h3);
+    color: var(--clr-accent);
+    margin-top: -2em;
+    margin-bottom: 4em;
+    /* text-shadow: 0 0 3px var(--clr-accent), 0 0 3px white; */
 }
 
 .intro__img {
@@ -377,7 +377,7 @@ header {
     margin: 0 auto;
 }
 
-@media (min-width: 800px) {
+@media (min-width: 1000px) {
     .services {
         display: flex;
         max-width: 1000px;
@@ -401,23 +401,44 @@ header {
 }
 
 .tech-stack {
-  width: calc(100% + 2em);
-  display: flex;
+    text-align: center;
+    padding: 0;
+    display: flex;
+    justify-content: center;
 }
 
 .tech-stack li {
-  margin-right: 1em;
-  list-style: none;
+    display: inline;
+    width: 48px;
+    text-align: center;
+    list-style: none;
+    margin: 0.25em;
+}
+
+.tech-stack img {
+    display: inline;
+    min-width: 48px;
+    background-color: whitesmoke;
+    box-shadow: 0px 0px 5px white;
 }
 
 @media (min-width: 600px) {
+    .tech-stack {
+        display: grid;
+        grid-template-columns: auto auto auto;
+    }
+
+    .tech-stack li {
+        list-style: none;
+    }
     .about-me {
         display: grid;
         grid-template-columns: 1fr 200px;
         grid-template-areas:
             "title img"
             "subtitle img"
-            "text img";
+            "text img"
+            "tech img";
         grid-column-gap: 2em;
     }
 
@@ -480,26 +501,26 @@ header {
 
 /* My resume */
 .section__title--resume {
-  text-align: center;
+    text-align: center;
 }
 
 .embed-resume {
-  text-align: center;
-  overflow: hidden;
+    text-align: center;
+    overflow: hidden;
 }
 
 /* Roadmap */
 .my-roadmap {
-  text-align: center;
+    text-align: center;
 }
 
 .roadmap {
-  display: grid;
-  grid-template-columns: auto auto auto;
+    display: grid;
+    grid-template-columns: auto auto auto;
 }
 
 .roadmap__item {
-  padding: 4em;
+    padding: 4em;
 }
 
 /* Footer */
