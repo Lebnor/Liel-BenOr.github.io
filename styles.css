@@ -478,9 +478,14 @@ header {
 }
 
 .portfolio__item {
-    background: var(--clr-accent);
+    /* background: var(--clr-dark); */
     overflow: hidden;
 }
+
+/* 
+.portfolio__item:hover {
+  background: var(--clr-light);
+} */
 
 .portfolio__img {
     border-radius: 0;
@@ -493,10 +498,14 @@ header {
     z-index: 2;
 }
 
+a {
+    height: fit-content;
+}
+
 .portfolio__img:hover,
 .portfolio__item:focus .portfolio__img {
     transform: scale(1.2);
-    opacity: 0.5;
+    opacity: 0.9;
 }
 
 /* My resume */
@@ -577,4 +586,23 @@ header {
     max-width: 600px;
     margin-left: auto;
     margin-right: auto;
+}
+
+.square {
+    border-radius: 0;
+}
+
+.video {
+    text-align: center;
+}
+
+.video__frame {
+    width: 100%;
+    height: 500px;
+}
+
+@media (max-width: 800px) {
+    .video__frame {
+        height: 200px;
+    }
 }
