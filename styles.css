@@ -373,6 +373,7 @@ header {
 
 .service {
     max-width: 500px;
+    width: 33%;
     margin: 0 auto;
 }
 
@@ -397,6 +398,16 @@ header {
 
 .about-me__img {
     box-shadow: var(--bs);
+}
+
+.tech-stack {
+  width: calc(100% + 2em);
+  display: flex;
+}
+
+.tech-stack li {
+  margin-right: 1em;
+  list-style: none;
 }
 
 @media (min-width: 600px) {
