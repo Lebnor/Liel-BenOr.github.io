@@ -21,13 +21,13 @@
             rel="stylesheet"
         />
 
-        <link rel="stylesheet" href="styles.css" />
+        <link rel="stylesheet" href="../styles.css" />
     </head>
     <body>
         <header class="nav-header">
             <div class="logo">
-                <a href="index.html#home"
-                    ><img src="img/icon192.png" alt=""
+                <a href="../index.html#home"
+                    ><img src="../img/icon192.png" alt=""
                 /></a>
             </div>
 
@@ -37,25 +37,25 @@
             <nav class="nav">
                 <ul class="nav__list">
                     <li class="nav__item">
-                        <a href="index.html#home" class="nav__link">Home</a>
+                        <a href="../index.html#home" class="nav__link">Home</a>
                     </li>
                     <li class="nav__item">
-                        <a href="index.html#services" class="nav__link"
+                        <a href="../index.html#services" class="nav__link"
                             >My skills</a
                         >
                     </li>
                     <li class="nav__item">
-                        <a href="index.html#about-me" class="nav__link"
+                        <a href="../index.html#about-me" class="nav__link"
                             >About me</a
                         >
                     </li>
                     <li class="nav__item">
-                        <a href="index.html#work" class="nav__link"
+                        <a href="../index.html#work" class="nav__link"
                             >My projects</a
                         >
                     </li>
                     <li class="nav__item">
-                        <a href="index.html#resume" class="nav__link"
+                        <a href="../index.html#resume" class="nav__link"
                             >My resume</a
                         >
                     </li>
@@ -65,27 +65,56 @@
 
         <section class="intro">
             <h1 class="section__title section__title--intro">
-                <strong>Wiki</strong>
+                <strong>Popsi Colada</strong>
             </h1>
             <img
-                src="img/projects/wiki.png"
-                alt="a picture of Jane Smith smiling"
+                src="../img/projects/popsi-colada.png"
+                alt=""
                 class="intro__img square"
             />
         </section>
 
         <div class="portfolio-item-individual">
-            <p></p>
-            <p>Est reprehenderit aliqua dolor officia amet mollit occaecat.</p>
+            <b>Inspiration</b>
             <p>
-                Qui magna cupidatat nostrud esse irure eiusmod sint esse culpa
-                minim.
+                So when I did my devops course at IITC the class had 2 projects
+                to practice OOP (object-oriented programming): a storehouse
+                manager of CD's, and supermarkets- simulator where you can
+                demonstrate the relationship between markets and food items.
             </p>
-            <div class="video">
-                <iframe class="video__frame" src="https://www.youtube.com/embed/a1vQ0FUFFGk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-            </div>
-            <p>Velit tempor enim duis sunt amet et enim culpa ut.</p>
-
+            <p>
+                So that gave me idea for my next project: to implement similar
+                apps on the web and combine them together. I ended up adding
+                more features than the asignments we recieved originally.
+            </p>
+            <b>Features</b>
+            <p>
+                Browsing markets lets you "buy" (there is no real money transfer
+                system in place) from the foods that particular market is
+                offering.
+            </p>
+            <p>
+                Browsing foods lets you see in which markets that food item is
+                available in, as well as view some additional info such as
+                nutritional value of the food.
+            </p>
+            <p>
+                In addition there is the collection of CD's where you can
+                create, update, delete, view your collection of CD's as well as
+                search for a particular CD from your list.
+            </p>
+            <img src="../img/projects/popsi-colada-browse.png" class="square" />
+            <strong>What I learned</strong>
+            <p>In this project I dived more deeply into Django, designing the REST api to support 
+              all the different querries I would have to do about the markets, foods and CD's,
+              using models and modelViews.
+            </p>
+            <p>
+                
+            </p>
+            <a href="https://popsi-colada.herokuapp.com/browse" target="_blank"
+                >Link to app <i class="fas fa-external-link-alt"></i
+            ></a>
         </div>
 
         <!-- Footer -->
