@@ -480,6 +480,15 @@ header {
 .portfolio__item {
     /* background: var(--clr-dark); */
     overflow: hidden;
+    
+    max-height: 167px;
+}
+
+.portfolio__item-mobile {
+    margin-left: auto;
+    margin-right: auto;
+    height: 167px;
+    object-fit: contain;
 }
 
 /* 
@@ -605,4 +614,18 @@ a {
     .video__frame {
         height: 200px;
     }
+
+    .portfolio-item-individual {
+        padding: 0;
+        max-width: 75%;
+        margin: 0 auto;
+    }
+
+    video {
+        width: 100%;
+    }
+}
+
+.text-center {
+    text-align: center;
 }

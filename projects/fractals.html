@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Liel Ben-Or project</title>
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css"
+        />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css"
+            integrity="sha256-46qynGAkLSFpVbEBog43gvNhfrOj+BmwXdxFgVK/Kvc="
+            crossorigin="anonymous"
+        />
+
+        <!-- Custom font -->
+        <link
+            href="https://fonts.googleapis.com/css?family=Open Sans"
+            rel="stylesheet"
+        />
+
+        <link rel="stylesheet" href="../styles.css" />
+    </head>
+    <body>
+        <header class="nav-header">
+            <div class="logo">
+                <a href="../index.html#home"
+                    ><img src="../img/icon192.png" alt=""
+                /></a>
+            </div>
+
+            <button class="nav-toggle" aria-label="toggle navigation">
+                <span class="hamburger"></span>
+            </button>
+            <nav class="nav">
+                <ul class="nav__list">
+                    <li class="nav__item">
+                        <a href="../index.html#home" class="nav__link">Home</a>
+                    </li>
+                    <li class="nav__item">
+                        <a href="../index.html#services" class="nav__link"
+                            >My skills</a
+                        >
+                    </li>
+                    <li class="nav__item">
+                        <a href="../index.html#about-me" class="nav__link"
+                            >About me</a
+                        >
+                    </li>
+                    <li class="nav__item">
+                        <a href="../index.html#work" class="nav__link"
+                            >My projects</a
+                        >
+                    </li>
+                    <li class="nav__item">
+                        <a href="../index.html#resume" class="nav__link"
+                            >My resume</a
+                        >
+                    </li>
+                </ul>
+            </nav>
+        </header>
+
+        <section class="intro">
+            <h1 class="section__title section__title--intro">
+                <strong>Fractals</strong>
+            </h1>
+        </section>
+
+        <section class="portfolio-item-individual">
+            <p>
+                Fractals is a simple Android app written in Java to visualize
+                fractals
+            </p>
+            <ul>
+                <li>
+                    <p>
+                        Choose between the famous
+                        <a
+                            href="https://en.wikipedia.org/wiki/L%C3%A9vy_C_curve"
+                            target="_blank"
+                            >Lévy C curve</a
+                        >
+                        or
+                        <a
+                            href="https://en.wikipedia.org/wiki/Sierpi%C5%84ski_triangle"
+                            target="_blank"
+                        >
+                            Sierpiński triangle</a
+                        >
+                    </p>
+                </li>
+                <li>
+                    <p>
+                        Tap the + button to add steps to the fractal and watch
+                        it grow, or tap the - button to go to previous steps and
+                        watch the fractal disappear.
+                    </p>
+                </li>
+            </ul>
+        </section>
+        <section class="portfolio-item-individual text-center">
+            <video width="320" height="240" controls>
+                <source src="../img/projects/fractals.mp4" type="video/mp4" />
+                Your browser does not support the video tag.
+            </video>
+        </section>
+
+        <section class="portfolio-item-individual">
+            <p>
+                While reading the book "Java software solutions" I learned about
+                the recursive nature of fractals <br />
+                and was inspired to make an App that visualizes them. <br />
+            </p>
+
+            <p>
+                <a
+                    href="https://github.com/Lebnor/weekly-planner"
+                    target="_blank"
+                    >Code on github</a
+                >
+            </p>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <a href="mailto:liel4349@gmail.com" class="footer__link"
+                ><i class="fa fa-envelope" aria-hidden="true"></i> Contact Me</a
+            >
+            <ul class="social-list">
+                <li class="social-list__link">
+                    <a href="https://github.com/lebnor"
+                        ><i class="fab fa-github"> github</i></a
+                    >
+                </li>
+
+                <li class="social-list__link">
+                    <a href="https://www.linkedin.com/in/liel-ben-or-145b64189/"
+                        ><i class="fab fa-linkedin-in"> linked-in</i></a
+                    >
+                </li>
+            </ul>
+        </footer>
+
+        <script src="js/index.js"></script>
+    </body>
+</html>
