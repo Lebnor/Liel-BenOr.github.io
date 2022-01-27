@@ -1,142 +1,131 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Liel Ben-Or project</title>
-        <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css"
-        />
-        <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css"
-            integrity="sha256-46qynGAkLSFpVbEBog43gvNhfrOj+BmwXdxFgVK/Kvc="
-            crossorigin="anonymous"
-        />
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Liel Ben-Or full-stack developer" />
+    <title>Liel Ben-Or project</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css"
+      integrity="sha256-46qynGAkLSFpVbEBog43gvNhfrOj+BmwXdxFgVK/Kvc="
+      crossorigin="anonymous"
+    />
 
-        <!-- Custom font -->
-        <link
-            href="https://fonts.googleapis.com/css?family=Open Sans"
-            rel="stylesheet"
-        />
+    <!-- Custom font -->
+    <link
+      href="https://fonts.googleapis.com/css?family=Open Sans"
+      rel="stylesheet"
+    />
 
-        <link rel="stylesheet" href="../styles.css" />
-    </head>
-    <body>
-        <header class="nav-header">
-            <div class="logo">
-                <a href="../index.html#home"
-                    ><img src="../img/icon192.png" alt=""
-                /></a>
-            </div>
+    <link rel="stylesheet" href="../styles.css" />
+  </head>
+  <body>
+    <header class="nav-header">
+      <div class="logo">
+        <a href="../index.html#home"><img src="../img/icon192.png" alt="" /></a>
+      </div>
 
-            <button class="nav-toggle" aria-label="toggle navigation">
-                <span class="hamburger"></span>
-            </button>
-            <nav class="nav">
-                <ul class="nav__list">
-                    <li class="nav__item">
-                        <a href="../index.html#home" class="nav__link">Home</a>
-                    </li>
-                    <li class="nav__item">
-                        <a href="../index.html#services" class="nav__link"
-                            >My skills</a
-                        >
-                    </li>
-                    <li class="nav__item">
-                        <a href="../index.html#about-me" class="nav__link"
-                            >About me</a
-                        >
-                    </li>
-                    <li class="nav__item">
-                        <a href="../index.html#work" class="nav__link"
-                            >My projects</a
-                        >
-                    </li>
-                    <li class="nav__item">
-                        <a href="../index.html#resume" class="nav__link"
-                            >My resume</a
-                        >
-                    </li>
-                </ul>
-            </nav>
-        </header>
+      <button class="nav-toggle" aria-label="toggle navigation">
+        <span class="hamburger"></span>
+      </button>
+      <nav class="nav">
+        <ul class="nav__list">
+          <li class="nav__item">
+            <a href="../index.html#home" class="nav__link">Home</a>
+          </li>
+          <li class="nav__item">
+            <a href="../index.html#services" class="nav__link">My skills</a>
+          </li>
+          <li class="nav__item">
+            <a href="../index.html#about-me" class="nav__link">About me</a>
+          </li>
+          <li class="nav__item">
+            <a href="../index.html#work" class="nav__link">My projects</a>
+          </li>
+          <li class="nav__item">
+            <a href="../index.html#resume" class="nav__link">My resume</a>
+          </li>
+        </ul>
+      </nav>
+    </header>
 
-        <section class="intro">
-            <h1 class="section__title section__title--intro">
-                <strong>Popsi Colada</strong>
-            </h1>
-            <img
-                src="../img/projects/popsi-colada.png"
-                alt=""
-                class="intro__img square"
-            />
-        </section>
+    <section class="intro">
+      <h1 class="section__title section__title--intro">
+        <strong>Popsi Colada</strong>
+      </h1>
+      <img
+        src="../img/projects/popsi-colada.png"
+        alt=""
+        class="intro__img square"
+      />
+    </section>
 
-        <div class="portfolio-item-individual">
-            <b>Inspiration</b>
-            <p>
-                So when I did my devops course at IITC the class had 2 projects
-                to practice OOP (object-oriented programming): a storehouse
-                manager of CD's, and supermarkets- simulator where you can
-                demonstrate the relationship between markets and food items.
-            </p>
-            <p>
-                So that gave me idea for my next project: to implement similar
-                apps on the web and combine them together. I ended up adding
-                more features than the asignments we recieved originally.
-            </p>
-            <b>Features</b>
-            <p>
-                Browsing markets lets you "buy" (there is no real money transfer
-                system in place) from the foods that particular market is
-                offering.
-            </p>
-            <p>
-                Browsing foods lets you see in which markets that food item is
-                available in, as well as view some additional info such as
-                nutritional value of the food.
-            </p>
-            <p>
-                In addition there is the collection of CD's where you can
-                create, update, delete, view your collection of CD's as well as
-                search for a particular CD from your list.
-            </p>
-            <img src="../img/projects/popsi-colada-browse.png" class="square" />
-            <strong>What I learned</strong>
-            <p>In this project I dived more deeply into Django, designing the REST api to support 
-              all the different querries I would have to do about the markets, foods and CD's,
-              using models and modelViews.
-            </p>
-            <p>
-                
-            </p>
-            <a href="https://popsi-colada.herokuapp.com/browse" target="_blank"
-                >Link to app <i class="fas fa-external-link-alt"></i
-            ></a>
-        </div>
+    <div class="portfolio-item-individual">
+      <b>Inspiration</b>
+      <p>
+        So when I did my devops course at IITC the class had 2 projects to
+        practice OOP (object-oriented programming): a storehouse manager of
+        CD's, and supermarkets- simulator where you can demonstrate the
+        relationship between markets and food items.
+      </p>
+      <p>
+        So that gave me idea for my next project: to implement similar apps on
+        the web and combine them together. I ended up adding more features than
+        the asignments we recieved originally.
+      </p>
+      <b>Features</b>
+      <p>
+        Browsing markets lets you "buy" (there is no real money transfer system
+        in place) from the foods that particular market is offering.
+      </p>
+      <p>
+        Browsing foods lets you see in which markets that food item is available
+        in, as well as view some additional info such as nutritional value of
+        the food.
+      </p>
+      <p>
+        In addition there is the collection of CD's where you can create,
+        update, delete, view your collection of CD's as well as search for a
+        particular CD from your list.
+      </p>
+      <img src="../img/projects/popsi-colada-browse.png" class="square" />
+      <strong>What I learned</strong>
+      <p>
+        In this project I dived more deeply into Django, designing the REST api
+        to support all the different querries I would have to do about the
+        markets, foods and CD's, using models and modelViews.
+      </p>
+      <p></p>
+      <a href="https://popsi-colada.herokuapp.com/browse" target="_blank"
+        >Link to app <i class="fas fa-external-link-alt"></i
+      ></a>
+    </div>
 
-        <!-- Footer -->
-        <footer class="footer">
-            <a href="mailto:liel4349@gmail.com" class="footer__link"
-                ><i class="fa fa-envelope" aria-hidden="true"></i> Contact Me</a
-            >
-            <ul class="social-list">
-                <li class="social-list__link">
-                    <a href="https://github.com/lebnor"
-                        ><i class="fab fa-github"> github</i></a
-                    >
-                </li>
+    <!-- Footer -->
+    <footer class="footer">
+      <a href="mailto:liel4349@gmail.com" class="footer__link"
+        ><i class="fa fa-envelope" aria-hidden="true"></i> Contact Me</a
+      >
+      <ul class="social-list">
+        <li class="social-list__link">
+          <a href="https://github.com/lebnor"
+            ><i class="fab fa-github"> github</i></a
+          >
+        </li>
 
-                <li class="social-list__link">
-                    <a href="https://www.linkedin.com/in/liel-ben-or-145b64189/"
-                        ><i class="fab fa-linkedin-in"> linked-in</i></a
-                    >
-                </li>
-            </ul>
-        </footer>
+        <li class="social-list__link">
+          <a href="https://www.linkedin.com/in/liel-ben-or-145b64189/"
+            ><i class="fab fa-linkedin-in"> linked-in</i></a
+          >
+        </li>
+      </ul>
+    </footer>
 
-        <script src="js/index.js"></script>
-    </body>
+    <script src="js/index.js"></script>
+  </body>
 </html>
