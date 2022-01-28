@@ -1,0 +1,31 @@
+{% extends "base.html" %} {% block body %}
+
+<section class="intro">
+  <h1 class="section__title section__title--intro">
+    <strong>Wiki</strong>
+  </h1>
+  <img
+    src="{{ url_for('static',filename='img/projects/wiki.png')}}"
+    alt=""
+    class="intro__img square"
+  />
+</section>
+
+<div class="portfolio-item-individual">
+  <p></p>
+  <p>Est reprehenderit aliqua dolor officia amet mollit occaecat.</p>
+  <p>Qui magna cupidatat nostrud esse irure eiusmod sint esse culpa minim.</p>
+  <div class="video">
+    <iframe
+      class="video__frame"
+      src="https://www.youtube.com/embed/a1vQ0FUFFGk"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen
+    ></iframe>
+  </div>
+  <p>Velit tempor enim duis sunt amet et enim culpa ut.</p>
+</div>
+
+{% endblock %}

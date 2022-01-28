@@ -1,10 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
   <head>
-    <meta charset="UTF-8" />
+    <link />
+    <meta charset="utf-8" />
+    <title>Liel BenOr</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Liel Ben-Or full-stack developer" />
-    <title>Liel Ben-Or project</title>
+
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css"
@@ -22,12 +24,18 @@
       rel="stylesheet"
     />
 
-    <link rel="stylesheet" href="../styles.css" />
+    <!-- My Custom CSS -->
+    <!-- <link rel="stylesheet" type="text/css" href="styles.css" /> -->
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static',filename='styles.css') }}"
+    />
   </head>
   <body>
     <header class="nav-header">
       <div class="logo">
-        <a href="../index.html#home"><img src="../img/icon192.png" alt="" /></a>
+        <a href="index.html#home"><img src="img/icon192.png" alt="" /></a>
       </div>
 
       <button class="nav-toggle" aria-label="toggle navigation">
@@ -36,49 +44,35 @@
       <nav class="nav">
         <ul class="nav__list">
           <li class="nav__item">
-            <a href="../index.html#home" class="nav__link">Home</a>
+            <a href="{{url_for('main', _anchor='home')}}" class="nav__link"
+              >Home</a
+            >
           </li>
           <li class="nav__item">
-            <a href="../index.html#services" class="nav__link">My skills</a>
+            <a href="{{url_for('main', _anchor='services')}}" class="nav__link"
+              >My skills</a
+            >
           </li>
           <li class="nav__item">
-            <a href="../index.html#about-me" class="nav__link">About me</a>
+            <a href="{{url_for('main', _anchor='about-me')}}" class="nav__link"
+              >About me</a
+            >
           </li>
           <li class="nav__item">
-            <a href="../index.html#work" class="nav__link">My projects</a>
+            <a href="{{url_for('main', _anchor='work')}}" class="nav__link"
+              >My projects</a
+            >
           </li>
           <li class="nav__item">
-            <a href="../index.html#resume" class="nav__link">My resume</a>
+            <a href="{{url_for('main', _anchor='resume')}}" class="nav__link"
+              >My resume</a
+            >
           </li>
         </ul>
       </nav>
     </header>
 
-    <section class="intro">
-      <h1 class="section__title section__title--intro">
-        <strong>Wiki</strong>
-      </h1>
-      <img src="../img/projects/wiki.png" alt="" class="intro__img square" />
-    </section>
-
-    <div class="portfolio-item-individual">
-      <p></p>
-      <p>Est reprehenderit aliqua dolor officia amet mollit occaecat.</p>
-      <p>
-        Qui magna cupidatat nostrud esse irure eiusmod sint esse culpa minim.
-      </p>
-      <div class="video">
-        <iframe
-          class="video__frame"
-          src="https://www.youtube.com/embed/a1vQ0FUFFGk"
-          title="YouTube video player"
-          frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen
-        ></iframe>
-      </div>
-      <p>Velit tempor enim duis sunt amet et enim culpa ut.</p>
-    </div>
+    {% block body %} {% endblock %}
 
     <!-- Footer -->
     <footer class="footer">
@@ -100,6 +94,6 @@
       </ul>
     </footer>
 
-    <script src="js/index.js"></script>
+    <script src="{{ url_for('static',filename='js/index.js') }}"></script>
   </body>
 </html>

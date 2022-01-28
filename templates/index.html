@@ -1,0 +1,199 @@
+{% extends "base.html" %} {% block body %}
+
+<!-- Introduction -->
+<section class="intro" id="home">
+  <h1 class="section__title section__title--intro">
+    Hi, I am <strong>Liel Ben-Or</strong>
+  </h1>
+  <p class="section__subtitle section__subtitle--intro">full-stack developer</p>
+  <img class="intro__img" src="img/me.png" alt="" />
+</section>
+<div class="greeting">
+  <p>Nice to meet you!</p>
+</div>
+
+<!-- My Services -->
+<section class="my-services" id="services">
+  <h2 class="section__title section__title--services">What I do</h2>
+  <div class="services">
+    <!-- service -->
+    <div class="service">
+      <h3>Backend</h3>
+      <p>
+        I use Flask and Django frameworks to create REST API for my web apps
+      </p>
+      <ul class="tech-stack">
+        <li class="tech-stack__item">
+          <img src="img/tech-stack/java.png" />
+        </li>
+        <li class="tech-stack__item">
+          <img src="img/tech-stack/python.png" />
+        </li>
+        <li class="tech-stack__item">
+          <img src="img/tech-stack/flask.png" />
+        </li>
+        <li class="tech-stack__item">
+          <img src="img/tech-stack/django.png" />
+        </li>
+        <li class="tech-stack__item">
+          <img src="img/tech-stack/mongodb.png" />
+        </li>
+        <li class="tech-stack__item">
+          <img src="img/tech-stack/mysql.png" />
+        </li>
+        <li class="tech-stack__item">
+          <img src="img/tech-stack/git.png" />
+        </li>
+      </ul>
+    </div>
+    <!-- service -->
+    <div class="service">
+      <h3>Frontend</h3>
+      <p>I use HTML, CSS, Javascript and React to implement the Frontend</p>
+      <ul class="tech-stack">
+        <li class="tech-stack__item">
+          <img src="img/tech-stack/html.png" />
+        </li>
+        <li class="tech-stack__item">
+          <img src="img/tech-stack/css.png" />
+        </li>
+        <li class="tech-stack__item">
+          <img src="img/tech-stack/javascript.png" />
+        </li>
+        <li class="tech-stack__item">
+          <img src="img/tech-stack/react.png" />
+        </li>
+        <li class="tech-stack__item">
+          <img src="img/tech-stack/bootstrap.png" />
+        </li>
+        <li class="tech-stack__item">
+          <img src="img/tech-stack/webpack.png" />
+        </li>
+        <li class="tech-stack__item">
+          <img src="img/tech-stack/babel.png" />
+        </li>
+      </ul>
+    </div>
+    <!-- service -->
+    <div class="service">
+      <h3>Cloud practitioner</h3>
+      <p>Serverless apps, AWS services, CI/CD pipelines</p>
+      <ul class="tech-stack">
+        <li>
+          <img class="tech-stack__img" src="img/tech-stack/aws.png" />
+        </li>
+        <li>
+          <img class="tech-stack__img" src="img/tech-stack/azuredevops.png" />
+        </li>
+        <li>
+          <img class="tech-stack__img" src="img/tech-stack/jenkins.png" />
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <a href="#work" class="btn">My Projects</a>
+</section>
+
+<!-- About Me -->
+<section class="about-me" id="about-me">
+  <h2 class="section__title section__title--about">Who I am</h2>
+  <p class="section__subtitle section__subtitle--about">
+    Student and self-taught developer
+  </p>
+
+  <div class="about-me__body">
+    <p>
+      I study computer science at the open university of Israel since 2020 and I
+      combine my formal education with independant self learning, by using
+      online resources such as Udemy, helsinki and haravrd's MOOC to learn how
+      to program.
+    </p>
+
+    <p>
+      I love making online tools such as browser extensions, or to build web
+      apps such as an e-commerce, and Java games like snake or chess.
+    </p>
+    <p>And most importantly, I ❤️ what I do!</p>
+  </div>
+
+  <img src="img/icon192.png" alt="" class="about-me__img" />
+</section>
+
+<!-- My Projects -->
+<section class="my-work" id="work">
+  <h2 class="section__title section__title--work">My Projects</h2>
+  <p class="section__subtitle section__subtitle--work">
+    A selection of my projects
+  </p>
+  <div class="portfolio">
+    <!-- Portfolio Item -->
+    <a href="projects/popsi-colada.html" class="portfolio__item">
+      <img
+        src="{{url_for('static', filename='img/projects/popsi-colada.png')}}"
+        alt=""
+        class="portfolio__img"
+      />
+    </a>
+    <!-- Portfolio Item -->
+    <a href="projects/network.html" class="portfolio__item">
+      <img
+        src="{{url_for('static', filename='img/projects/network.png')}}"
+        width="100%"
+        alt=""
+        class="portfolio__img"
+      />
+    </a>
+    <!-- Portfolio Item -->
+    <a href="projects/commerce.html" class="portfolio__item">
+      <img
+        src="{{url_for('static', filename='img/projects/commerce.png')}}"
+        alt=""
+        class="portfolio__img"
+      />
+    </a>
+    <!-- Portfolio Item -->
+    <a href="projects/wiki.html" class="portfolio__item">
+      <img
+        src="{{url_for('static', filename='img/projects/wiki.png')}}"
+        alt=""
+        class="portfolio__img"
+      />
+    </a>
+    <!-- Portfolio Item -->
+    <a href="projects/weekly-planner.html" class="portfolio__item">
+      <img
+        src="{{ url_for('static',filename='img/projects/extension.png') }}"
+        alt=""
+        class="portfolio__img"
+      />
+    </a>
+    <!-- Portfolio Item -->
+    <a href="projects/fractals.html" class="portfolio__item">
+      <img
+        src="{{ url_for('static',filename='img/projects/fractals-main.png') }}"
+        alt=""
+        class="portfolio__img portfolio__item-mobile"
+      />
+    </a>
+    <!-- Portfolio Item -->
+    <div class="portfolio__item">
+      <p>Planned project:</p>
+      <p>Sudoku solver</p>
+      <img />
+    </div>
+  </div>
+  <p>And more coming soon...</p>
+</section>
+
+<!-- My resume -->
+<section class="resume" id="resume">
+  <h2 class="section__title section__title--resume">My resume</h2>
+  <div class="embed-resume">
+    <a href="img/liel_ben_or_resume.pdf" target="_blank"
+      >View resume<span style="margin-right: 0.25em"></span
+      ><i class="fas fa-external-link-alt"> </i>
+    </a>
+  </div>
+</section>
+{% endblock %}

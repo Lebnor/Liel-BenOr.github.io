@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block body %}
+        <section class="intro">
+            <h1 class="section__title section__title--intro">
+                <strong>Commerce</strong>
+            </h1>
+            <img
+                src="{{ url_for('static',filename='img/projects/commerce.png')}}"
+                alt="commerce main page"
+                class="intro__img square"
+            />
+        </section>
+
+        <div class="portfolio-item-individual">
+            <p></p>
+            <p>In commerce users can view listings and create listings, bid a price, and make comments and likes</p>
+            <p>Users can sort a listing by category, see the current price of a listing, and follow certain items</p>
+            <p>
+                The purpose of this site is to simulate an e-bay like website.
+            </p>
+            <p>
+                Techstack: backend is built with Flask (Python framework), <br>
+                frontend is made with HTML, CSS, and bootstrap
+            </p>
+            <!-- embed youtube video -->
+            <div class="video">
+                <iframe class="video__frame" src="https://www.youtube.com/embed/WAV3b0eqqos" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </iframe>
+            </div>
+            <p><a href="https://github.com/Lebnor/cs50-web-commerce" target="_blank">Code on github</a></p>
+        </div>
+
+ {% endblock %}
