@@ -6,7 +6,11 @@
     Hi, I am <strong>Liel Ben-Or</strong>
   </h1>
   <p class="section__subtitle section__subtitle--intro">full-stack developer</p>
-  <img class="intro__img" src="img/me.png" alt="" />
+  <img
+    class="intro__img"
+    src="{{url_for('static', filename='img/me.png')}}"
+    alt=""
+  />
 </section>
 <div class="greeting">
   <p>Nice to meet you!</p>
@@ -24,25 +28,46 @@
       </p>
       <ul class="tech-stack">
         <li class="tech-stack__item">
-          <img src="img/tech-stack/java.png" />
+          <img
+            alt=""
+            src="{{url_for('static', filename='img/tech-stack/java.png')}}"
+          />
         </li>
         <li class="tech-stack__item">
-          <img src="img/tech-stack/python.png" />
+          <img
+            alt=""
+            src="{{url_for('static', filename='img/tech-stack/python.png')}}"
+          />
         </li>
         <li class="tech-stack__item">
-          <img src="img/tech-stack/flask.png" />
+          <img
+            alt=""
+            src="{{url_for('static', filename='img/tech-stack/flask.png')}}"
+          />
         </li>
         <li class="tech-stack__item">
-          <img src="img/tech-stack/django.png" />
+          <img
+            alt=""
+            src="{{url_for('static', filename='img/tech-stack/django.png')}}"
+          />
         </li>
         <li class="tech-stack__item">
-          <img src="img/tech-stack/mongodb.png" />
+          <img
+            alt=""
+            src="{{url_for('static', filename='img/tech-stack/mongodb.png')}}"
+          />
         </li>
         <li class="tech-stack__item">
-          <img src="img/tech-stack/mysql.png" />
+          <img
+            alt=""
+            src="{{url_for('static', filename='img/tech-stack/mysql.png')}}"
+          />
         </li>
         <li class="tech-stack__item">
-          <img src="img/tech-stack/git.png" />
+          <img
+            alt=""
+            src="{{url_for('static', filename='img/tech-stack/git.png')}}"
+          />
         </li>
       </ul>
     </div>
@@ -52,25 +77,46 @@
       <p>I use HTML, CSS, Javascript and React to implement the Frontend</p>
       <ul class="tech-stack">
         <li class="tech-stack__item">
-          <img src="img/tech-stack/html.png" />
+          <img
+            alt=""
+            src="{{url_for('static', filename='img/tech-stack/html.png')}}"
+          />
         </li>
         <li class="tech-stack__item">
-          <img src="img/tech-stack/css.png" />
+          <img
+            alt=""
+            src="{{url_for('static', filename='img/tech-stack/css.png')}}"
+          />
         </li>
         <li class="tech-stack__item">
-          <img src="img/tech-stack/javascript.png" />
+          <img
+            alt=""
+            src="{{url_for('static', filename='img/tech-stack/javascript.png')}}"
+          />
         </li>
         <li class="tech-stack__item">
-          <img src="img/tech-stack/react.png" />
+          <img
+            alt=""
+            src="{{url_for('static', filename='img/tech-stack/react.png')}}"
+          />
         </li>
         <li class="tech-stack__item">
-          <img src="img/tech-stack/bootstrap.png" />
+          <img
+            alt=""
+            src="{{url_for('static', filename='img/tech-stack/bootstrap.png')}}"
+          />
         </li>
         <li class="tech-stack__item">
-          <img src="img/tech-stack/webpack.png" />
+          <img
+            alt=""
+            src="{{url_for('static', filename='img/tech-stack/webpack.png')}}"
+          />
         </li>
         <li class="tech-stack__item">
-          <img src="img/tech-stack/babel.png" />
+          <img
+            alt=""
+            src="{{url_for('static', filename='img/tech-stack/babel.png')}}"
+          />
         </li>
       </ul>
     </div>
@@ -80,19 +126,31 @@
       <p>Serverless apps, AWS services, CI/CD pipelines</p>
       <ul class="tech-stack">
         <li>
-          <img class="tech-stack__img" src="img/tech-stack/aws.png" />
+          <img
+            alt=""
+            class="tech-stack__img"
+            src="{{url_for('static', filename='img/tech-stack/aws.png')}}"
+          />
         </li>
         <li>
-          <img class="tech-stack__img" src="img/tech-stack/azuredevops.png" />
+          <img
+            alt=""
+            class="tech-stack__img"
+            src="{{url_for('static', filename='img/tech-stack/azuredevops.png')}}"
+          />
         </li>
         <li>
-          <img class="tech-stack__img" src="img/tech-stack/jenkins.png" />
+          <img
+            alt=""
+            class="tech-stack__img"
+            src="{{url_for('static', filename='img/tech-stack/jenkins.png')}}"
+          />
         </li>
       </ul>
     </div>
   </div>
 
-  <a href="#work" class="btn">My Projects</a>
+  <a href="#work" class="btn btn-blue">My Projects</a>
 </section>
 
 <!-- About Me -->
@@ -117,7 +175,11 @@
     <p>And most importantly, I ❤️ what I do!</p>
   </div>
 
-  <img src="img/icon192.png" alt="" class="about-me__img" />
+  <img
+    src="{{url_for('static', filename='img/icon192.png')}}"
+    alt=""
+    class="about-me__img"
+  />
 </section>
 
 <!-- My Projects -->
@@ -133,7 +195,9 @@
         src="{{url_for('static', filename='img/projects/popsi-colada.png')}}"
         alt=""
         class="portfolio__img"
+        width=""
       />
+      <span class="portfolio__item__text">Popsi Colada</span>
     </a>
     <!-- Portfolio Item -->
     <a href="projects/network.html" class="portfolio__item">
@@ -143,6 +207,7 @@
         alt=""
         class="portfolio__img"
       />
+      <span class="portfolio__item__text">Popsi Colada</span>
     </a>
     <!-- Portfolio Item -->
     <a href="projects/commerce.html" class="portfolio__item">
@@ -151,6 +216,7 @@
         alt=""
         class="portfolio__img"
       />
+      <span class="portfolio__item__text">Commerce</span>
     </a>
     <!-- Portfolio Item -->
     <a href="projects/wiki.html" class="portfolio__item">
@@ -159,6 +225,7 @@
         alt=""
         class="portfolio__img"
       />
+      <span class="portfolio__item__text">Wiki</span>
     </a>
     <!-- Portfolio Item -->
     <a href="projects/weekly-planner.html" class="portfolio__item">
@@ -167,6 +234,7 @@
         alt=""
         class="portfolio__img"
       />
+      <span class="portfolio__item__text">Weekly Planner</span>
     </a>
     <!-- Portfolio Item -->
     <a href="projects/fractals.html" class="portfolio__item">
@@ -175,12 +243,12 @@
         alt=""
         class="portfolio__img portfolio__item-mobile"
       />
+      <span class="portfolio__item__text">Fractals</span>
     </a>
     <!-- Portfolio Item -->
     <div class="portfolio__item">
       <p>Planned project:</p>
       <p>Sudoku solver</p>
-      <img />
     </div>
   </div>
   <p>And more coming soon...</p>

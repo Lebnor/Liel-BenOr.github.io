@@ -35,7 +35,9 @@
   <body>
     <header class="nav-header">
       <div class="logo">
-        <a href="index.html#home"><img src="img/icon192.png" alt="" /></a>
+        <a href="{{url_for('main', _anchor='home')}}"
+          ><img src="{{url_for('static', filename='img/icon192.png')}}" alt=""
+        /></a>
       </div>
 
       <button class="nav-toggle" aria-label="toggle navigation">
