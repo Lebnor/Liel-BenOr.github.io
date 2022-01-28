@@ -1,0 +1,37 @@
+{% extends "base.html" %} {% block body %}
+<section class="intro">
+  <h1 class="section__title section__title--intro">
+    <strong>Network</strong>
+  </h1>
+  <img
+    src="{{ url_for('static',filename='img/projects/network.png')}}"
+    alt=""
+    class="intro__img square"
+  />
+</section>
+
+<div class="portfolio-item-individual">
+  <p></p>
+  <p>Network is a simulation of twitter</p>
+  <p>
+    In network you can create posts for other users to see, read other users'
+    posts, leave a like on them and follow other users
+  </p>
+  <p>
+    Only logged in users can like and create posts, but everyone can read the
+    posts users already made
+  </p>
+  <p></p>
+  <img
+    src="{{ url_for('static',filename='img/projects/network-profile.png')}}"
+    class="square"
+  />
+  <p>
+    Above is a view of a user's profile page, showing their relevant information
+  </p>
+  <p></p>
+  <a href="https://cs50web-social-network-liel.herokuapp.com/" target="_blank"
+    >Link to app <i class="fas fa-external-link-alt"></i
+  ></a>
+</div>
+{% endblock %}

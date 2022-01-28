@@ -1,0 +1,53 @@
+{% extends "base.html" %} {% block body %}
+<section class="intro">
+  <h1 class="section__title section__title--intro">
+    <strong>Weekly Planner</strong>
+  </h1>
+  <img
+    src="{{ url_for('static',filename='img/projects/extension.png')}}"
+    alt="a picture of Jane Smith smiling"
+    class="intro__img square"
+  />
+</section>
+
+<div class="portfolio-item-individual">
+  <p>Ever feel like chrome's default new tab page is bland and uninspiring?</p>
+  <p>
+    Weekly-planner replaces the new tab page and offers you a tool to quickly
+    write your plans for the next week.
+  </p>
+  <p>
+    At the top we have quick access to frequent tabs. Tabs that are a part of
+    educational content / for university are seperated.
+  </p>
+  <p>
+    At the bottom there is a short text field for each day of the week, so you
+    can jot down important tasks for that day. <br />
+    The current day is accentuated with gold borders.
+  </p>
+  <p>
+    In the settings for this extension you can change the color of the
+    background and choose wether it should be gradient or not
+  </p>
+  <div class="video">
+    <iframe
+      class="video__frame"
+      src="https://www.youtube.com/embed/v4wH1OwF5No"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen
+    ></iframe>
+  </div>
+
+  <p>
+    I've personally used weekly-planner so I wouldn't have an excuse to forget
+    to check my calendar...
+  </p>
+  <p>
+    <a href="https://github.com/Lebnor/weekly-planner" target="_blank"
+      >Code on github</a
+    >
+  </p>
+</div>
+{% endblock %}

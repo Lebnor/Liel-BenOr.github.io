@@ -1,0 +1,59 @@
+{% extends "base.html" %} {% block body %}
+<section class="intro">
+  <h1 class="section__title section__title--intro">
+    <strong>Fractals</strong>
+  </h1>
+</section>
+
+<section class="portfolio-item-individual">
+  <p>Fractals is a simple Android app written in Java to visualize fractals</p>
+  <ul>
+    <li>
+      <p>
+        Choose between the famous
+        <a
+          href="https://en.wikipedia.org/wiki/L%C3%A9vy_C_curve"
+          target="_blank"
+          >Lévy C curve</a
+        >
+        or
+        <a
+          href="https://en.wikipedia.org/wiki/Sierpi%C5%84ski_triangle"
+          target="_blank"
+        >
+          Sierpiński triangle</a
+        >
+      </p>
+    </li>
+    <li>
+      <p>
+        Tap the + button to add steps to the fractal and watch it grow, or tap
+        the - button to go to previous steps and watch the fractal disappear.
+      </p>
+    </li>
+  </ul>
+</section>
+<section class="portfolio-item-individual text-center">
+  <video width="320" height="240" controls>
+    <source
+      src="{{ url_for('static',filename='img/projects/fractals.mp4')}}"
+      type="video/mp4"
+    />
+    Your browser does not support the video tag.
+  </video>
+</section>
+
+<section class="portfolio-item-individual">
+  <p>
+    While reading the book "Java software solutions" I learned about the
+    recursive nature of fractals <br />
+    and was inspired to make an App that visualizes them. <br />
+  </p>
+
+  <p>
+    <a href="https://github.com/Lebnor/weekly-planner" target="_blank"
+      >Code on github</a
+    >
+  </p>
+</section>
+{% endblock %}
