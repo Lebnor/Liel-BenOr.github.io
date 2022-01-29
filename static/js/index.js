@@ -62,18 +62,31 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   // "what i do" section fade-up effect when scrolled into view
-  const observer = new IntersectionObserver(
+  const servicesObserver = new IntersectionObserver(
     (elements) => {
       if (elements[0]["isIntersecting"] === true) {
         document.getElementsByClassName(
           "fade-up-container"
         )[0].style.animationPlayState = "running";
-        observer.disconnect();
+        servicesObserver.disconnect();
       }
     },
     { threshold: [isMobile ? 0.01 : 0.15] }
   );
-  observer.observe(document.getElementsByClassName("services")[0]);
+  servicesObserver.observe(document.getElementsByClassName("services")[0]);
+
+  // "about me" section fade-right effect when scrolled into view
+  const aboutMeObserver = new IntersectionObserver(
+    (elements) => {
+      if (elements[0]["isIntersecting"] === true) {
+        document.getElementById("about-me").style.animationPlayState =
+          "running";
+        aboutMeObserver.disconnect();
+      }
+    },
+    { threshold: [isMobile ? 0.01 : 0.15] }
+  );
+  aboutMeObserver.observe(document.getElementById("about-me"));
 });
 
 // effects on page scroll
