@@ -7,8 +7,8 @@
 /* Custom Properties */
 
 :root {
-  --ff-primary: "Open Sans", serif;
-  --ff-secondary: "Roboto slab", serif;
+  --ff-primary: "Cousine", monospace;
+  --ff-secondary: "Alef", monospace;
 
   --fw-light: 100;
   --fw-reg: 200;
@@ -127,6 +127,113 @@ h3 {
 
 .section__title--intro strong {
   display: block;
+}
+
+/* intro fade down */
+.fade-down {
+  opacity: 0;
+  transform: translateY(-4rem);
+  animation: fade-down 1s ease forwards;
+}
+
+@keyframes fade-down {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* end intro fade down */
+
+.intro,
+.typewriter {
+  font-weight: 100;
+}
+/* Typewriter effect */
+
+@media (min-width: 450px) {
+  .typewriter {
+    font-family: monospace, monospace;
+    position: relative;
+    width: fit-content;
+  }
+  .typewriter::before,
+  .typewriter::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
+  .head::before,
+  .sub::before {
+    background-color: white;
+  }
+  .head::after,
+  .sub::after {
+    background-color: black;
+    width: 0.09em;
+  }
+
+  .head::before {
+    animation: typewriter 3s steps(8) 2s forwards,
+      disappear 1s steps(1) 8s infinite;
+  }
+
+  .head::after {
+    animation: typewriter 3s steps(8) 2s forwards,
+      blink 750ms steps(2, start) infinite, disappear 0s 5.5s forwards;
+  }
+
+  .sub::before {
+    animation: typewriter 5s steps(11) 6s forwards;
+  }
+
+  .sub::after {
+    opacity: 0;
+    animation: typewriter 5s steps(11) 6s forwards,
+      blink 750ms steps(2, start) 5s infinite;
+  }
+
+  @keyframes typewriter {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 1;
+      left: 100%;
+    }
+  }
+
+  @keyframes blink {
+    to {
+      visibility: hidden;
+    }
+  }
+
+  @keyframes disappear {
+    to {
+      opacity: 0;
+      visibility: hidden;
+      display: none;
+      color: white;
+    }
+  }
+}
+/* End Typewriter effect */
+
+.greeting {
+  transform: translateY(3rem);
+  animation: fade-up 2s 11s ease forwards;
+  opacity: 0;
+}
+
+@keyframes fade-up {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .section__subtitle {
@@ -311,7 +418,6 @@ header {
   color: var(--clr-accent);
   margin-top: -2em;
   margin-bottom: 4em;
-  /* text-shadow: 0 0 3px var(--clr-accent), 0 0 3px white; */
 }
 
 .intro__img {
@@ -438,6 +544,16 @@ header {
   min-width: 48px;
   background-color: whitesmoke;
   box-shadow: 0px 0px 5px white;
+}
+
+.tech-stack__item img {
+  transition: 0.5s ease;
+}
+
+.tech-stack__item img:hover {
+  transform: scale(1.25);
+  filter: brightness(1.1);
+  box-shadow: var(--bs);
 }
 
 @media (min-width: 600px) {

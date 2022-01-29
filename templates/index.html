@@ -1,10 +1,11 @@
 {% extends "base.html" %} {% block body %}
 
 <!-- Introduction -->
-<section class="intro" id="home">
-  <h1 class="section__title section__title--intro">
-    Hi, I am <strong>Liel Ben-Or</strong>
-  </h1>
+<section class="intro fade-down" id="home">
+  <div class="section__title section__title--intro typewriter-container">
+    <h1 class="typewriter head">Hi, I am</h1>
+    <h1 class="typewriter sub">Liel Ben-Or</h1>
+  </div>
   <p class="section__subtitle section__subtitle--intro">full-stack developer</p>
   <img
     class="intro__img"
@@ -125,21 +126,21 @@
       <h3>Cloud practitioner</h3>
       <p>Serverless apps, AWS services, CI/CD pipelines</p>
       <ul class="tech-stack">
-        <li>
+        <li class="tech-stack__item">
           <img
             alt=""
             class="tech-stack__img"
             src="{{url_for('static', filename='img/tech-stack/aws.png')}}"
           />
         </li>
-        <li>
+        <li class="tech-stack__item">
           <img
             alt=""
             class="tech-stack__img"
             src="{{url_for('static', filename='img/tech-stack/azuredevops.png')}}"
           />
         </li>
-        <li>
+        <li class="tech-stack__item">
           <img
             alt=""
             class="tech-stack__img"
@@ -169,8 +170,8 @@
     </p>
 
     <p>
-      I love making online tools such as browser extensions, or to build web
-      apps such as an e-commerce, and Java games like snake or chess.
+      I make online tools such as browser extensions, build web apps such as an
+      e-commerce, and Java games like snake or chess.
     </p>
     <p>And most importantly, I ❤️ what I do!</p>
   </div>
@@ -258,7 +259,9 @@
 <section class="resume" id="resume">
   <h2 class="section__title section__title--resume">My resume</h2>
   <div class="embed-resume">
-    <a href="img/liel_ben_or_resume.pdf" target="_blank"
+    <a
+      href="{{url_for('static', filename='img/liel_ben_or_resume.pdf')}}"
+      target="_blank"
       >View resume<span style="margin-right: 0.25em"></span
       ><i class="fas fa-external-link-alt"> </i>
     </a>
