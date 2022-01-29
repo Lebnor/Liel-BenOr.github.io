@@ -17,7 +17,7 @@
 window.addEventListener("DOMContentLoaded", () => {
   // intro typewriter effect for mobile
   let isMobile = window.matchMedia(
-    "only screen and (max-width: 442px)"
+    "only screen and (max-width: 450px)"
   ).matches;
 
   if (isMobile) {
@@ -38,12 +38,14 @@ window.addEventListener("DOMContentLoaded", () => {
     const headTimeout = setInterval(() => {
       if (head) {
         const char = head[0];
-        headElem.textContent = headElem.textContent + char;
+        let curText = headElem.textContent.replace("|", "");
+        curText += char;
+        headElem.textContent = curText;
         head = head.substring(1);
       } else {
         clearInterval(headTimeout);
       }
-    }, 500);
+    }, 200);
 
     // intro subtitle
     const subStartAnimating = setTimeout(() => {
@@ -55,9 +57,23 @@ window.addEventListener("DOMContentLoaded", () => {
         } else {
           clearInterval(writeToSub);
         }
-      }, 500);
-    }, 5000);
+      }, 200);
+    }, 2500);
   }
+
+  // "what i do" section fade-up effect when scrolled into view
+  const observer = new IntersectionObserver(
+    (elements) => {
+      if (elements[0]["isIntersecting"] === true) {
+        document.getElementsByClassName(
+          "fade-up-container"
+        )[0].style.animationPlayState = "running";
+        observer.disconnect();
+      }
+    },
+    { threshold: [isMobile ? 0.01 : 0.15] }
+  );
+  observer.observe(document.getElementsByClassName("services")[0]);
 });
 
 // effects on page scroll

@@ -145,13 +145,11 @@ h3 {
 
 /* end intro fade down */
 
-.intro,
+/* typewriter effect */
 .typewriter {
   font-weight: 100;
 }
-/* Typewriter effect */
-
-@media (min-width: 450px) {
+@media (min-width: 442px) {
   .typewriter {
     font-family: monospace, monospace;
     position: relative;
@@ -473,7 +471,7 @@ header {
 .section__title--services::after {
   content: "";
   display: block;
-  width: 25%;
+  width: 65%;
   height: 1px;
   margin: 0.5em auto 1em;
   background: var(--clr-light);
@@ -512,6 +510,12 @@ header {
     width: 75vw;
     margin: 4rem auto;
   }
+}
+.fade-up-container {
+  opacity: 0;
+  transform: translateY(4rem);
+  animation: fade-up 2s ease forwards;
+  animation-play-state: paused;
 }
 
 /* About Me section */
