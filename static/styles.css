@@ -730,6 +730,14 @@ a {
   text-decoration: underline;
 }
 
+.repository-text {
+  color: var(--clr-light);
+}
+
+.repository-link {
+  color: var(--clr-accent);
+}
+
 .social-list {
   list-style: none;
   display: flex;
