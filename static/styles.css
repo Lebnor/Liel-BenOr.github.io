@@ -64,8 +64,8 @@ section {
 
 img {
   display: block;
+  border-radius: 50%;
   max-width: 100%;
-  border-radius: var(--br);
 }
 
 strong {
@@ -411,6 +411,8 @@ header {
 /* Intro Section */
 .intro {
   position: relative;
+  display: flex;
+  flex-direction: column;
 }
 
 .greeting {
@@ -453,6 +455,12 @@ header {
     left: -1.5rem;
     width: calc(100% + 1.5em);
   }
+}
+
+.portfolio-intro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 /* My services section */
@@ -629,6 +637,17 @@ header {
   max-width: 1000px;
   margin: 0 auto;
   gap: 5px;
+}
+
+.portfolio-page img {
+  border-radius: none;
+  max-width: 50vw;
+}
+
+@media (max-width: 800px) {
+  .portfolio-page img {
+    max-width: 90vw;
+  }
 }
 
 .portfolio__item {

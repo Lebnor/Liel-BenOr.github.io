@@ -1,0 +1,46 @@
+{% extends "base.html" %} {% block body %}
+<main class="portfolio-page">
+  <section class="portfolio-intro">
+    <h1 class="section__title section__title--intro">File Generator</h1>
+    <img
+      src="{{ url_for('static',filename='img/projects/angular-file-generator-main.png')}}"
+      alt=""
+      class="intro__img square"
+    />
+  </section>
+
+  <div class="portfolio-item-individual">
+    <p>
+      This web app serves as an introduction to Angular development. Since I've
+      mostly used React so far, I was excited to write my first page using
+      Angular framework.
+    </p>
+    <h2>Features</h2>
+    <ol>
+      <li>Choose the file name</li>
+      <li>
+        Optionally choose file extension (Currently Java, Python, or Text)
+      </li>
+      <li>
+        Type whatever you want into the text area, or click a button to load a
+        random short story
+      </li>
+      <li>Download your file to your local storage</li>
+    </ol>
+
+    <p>
+      You can also choose the page's language (English or Hebrew). This is
+      implemented by using pipes, services, and aws lambda function
+    </p>
+    <div class="portfolio-intro">
+      <img
+        class="square"
+        alt=""
+        src="{{ url_for('static',filename='img/projects/angular-file-generator-translated.png')}}"
+      /><a href="https://angular-file-generator.vercel.app/" target="_blank"
+        >Link to app <i class="fas fa-external-link-alt"></i
+      ></a>
+    </div>
+  </div>
+</main>
+{% endblock %}
