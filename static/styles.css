@@ -651,16 +651,31 @@ header {
 }
 
 .portfolio__item {
-  /* background: var(--clr-dark); */
   overflow: hidden;
   outline: 1px ridge var(--clr-light);
   max-height: 167px;
+  position: relative;
 }
 
-.portfolio__item__text {
-  z-index: 9999;
+.portfolio__item:hover img {
+  filter: brightness(50%);
+}
+
+.portfolio__text {
+  position: absolute;
+  left: 2rem;
+  top: 2rem;
   color: white;
-  display: none;
+  font-size: var(--fs-h3);
+  text-shadow: 2px 2px 5px var(--clr-dark);
+  visibility: hidden;
+  pointer-events: none;
+  transition: transform 650ms cubic-bezier(0.5, 0, 0.5, 1), opacity 250ms linear;
+}
+
+.portfolio__item:hover .portfolio__text {
+  visibility: visible;
+  transform: scale(1.25);
 }
 
 .portfolio__item-mobile {
