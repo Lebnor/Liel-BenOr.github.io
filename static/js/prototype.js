@@ -150,4 +150,5 @@
   syncContainerHeight();
   updateNeutralZoneWidth();
   window.setTimeout(syncContainerHeight, 250);
+
 })();

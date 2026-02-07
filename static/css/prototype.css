@@ -55,9 +55,11 @@ body {
   z-index: 2;
   clip-path: polygon(
     0% 0%,
-    50% 0%,     50.4% 8%,  49.8% 16%, 50.5% 24%,
-    49.7% 32%,  50.3% 40%, 49.6% 48%, 50.4% 56%,
-    49.8% 64%,  50.5% 72%, 49.7% 80%, 50.3% 88%,
+    50% 0%,     51.2% 4%,  49.4% 9%,  50.8% 14%,
+    49.1% 20%,  51.4% 25%, 49.6% 31%, 50.9% 36%,
+    48.8% 42%,  51.1% 48%, 49.3% 54%, 51.3% 59%,
+    49.0% 65%,  50.7% 71%, 48.9% 77%, 51.2% 83%,
+    49.5% 89%,  50.6% 95%,
     50% 100%,
     0% 100%
   );
@@ -66,22 +68,32 @@ body {
 .layer-new {
   z-index: 3;
   clip-path: polygon(
-    50% 0%,     50.4% 8%,  49.8% 16%, 50.5% 24%,
-    49.7% 32%,  50.3% 40%, 49.6% 48%, 50.4% 56%,
-    49.8% 64%,  50.5% 72%, 49.7% 80%, 50.3% 88%,
+    50% 0%,     51.2% 4%,  49.4% 9%,  50.8% 14%,
+    49.1% 20%,  51.4% 25%, 49.6% 31%, 50.9% 36%,
+    48.8% 42%,  51.1% 48%, 49.3% 54%, 51.3% 59%,
+    49.0% 65%,  50.7% 71%, 48.9% 77%, 51.2% 83%,
+    49.5% 89%,  50.6% 95%,
     50% 100%,
     100% 100%,
     100% 0%
   );
 }
 
-/* Show content immediately in both layers. */
-.layer .fade-down,
-.layer .fade-up-container,
-.layer .about-me,
-.layer .greeting {
+.layer-old .fade-down,
+.layer-old .fade-up-container,
+.layer-old .about-me,
+.layer-old .greeting {
   opacity: 1 !important;
   transform: none !important;
+  animation: none !important;
+}
+
+.layer-new .fade-down,
+.layer-new .fade-up-container,
+.layer-new .about-me,
+.layer-new .greeting {
+  opacity: unset;
+  transform: unset;
   animation: none !important;
 }
 
@@ -128,9 +140,11 @@ body {
 .prototype-wrapper.hover-left .layer-old {
   clip-path: polygon(
     0% 0%,
-    100% 0%,    100% 8%,   100% 16%,  100% 24%,
-    100% 32%,   100% 40%,  100% 48%,  100% 56%,
-    100% 64%,   100% 72%,  100% 80%,  100% 88%,
+    100% 0%,    100% 4%,   100% 9%,   100% 14%,
+    100% 20%,   100% 25%,  100% 31%,  100% 36%,
+    100% 42%,   100% 48%,  100% 54%,  100% 59%,
+    100% 65%,   100% 71%,  100% 77%,  100% 83%,
+    100% 89%,   100% 95%,
     100% 100%,
     0% 100%
   );
@@ -139,9 +153,11 @@ body {
 
 .prototype-wrapper.hover-left .layer-new {
   clip-path: polygon(
-    100% 0%,    100% 8%,   100% 16%,  100% 24%,
-    100% 32%,   100% 40%,  100% 48%,  100% 56%,
-    100% 64%,   100% 72%,  100% 80%,  100% 88%,
+    100% 0%,    100% 4%,   100% 9%,   100% 14%,
+    100% 20%,   100% 25%,  100% 31%,  100% 36%,
+    100% 42%,   100% 48%,  100% 54%,  100% 59%,
+    100% 65%,   100% 71%,  100% 77%,  100% 83%,
+    100% 89%,   100% 95%,
     100% 100%,
     100% 100%,
     100% 0%
@@ -151,9 +167,11 @@ body {
 
 .prototype-wrapper.hover-right .layer-new {
   clip-path: polygon(
-    0% 0%,      0% 8%,     0% 16%,    0% 24%,
-    0% 32%,     0% 40%,    0% 48%,    0% 56%,
-    0% 64%,     0% 72%,    0% 80%,    0% 88%,
+    0% 0%,      0% 4%,     0% 9%,     0% 14%,
+    0% 20%,     0% 25%,    0% 31%,    0% 36%,
+    0% 42%,     0% 48%,    0% 54%,    0% 59%,
+    0% 65%,     0% 71%,    0% 77%,    0% 83%,
+    0% 89%,     0% 95%,
     0% 100%,
     100% 100%,
     100% 0%
@@ -164,9 +182,11 @@ body {
 .prototype-wrapper.hover-right .layer-old {
   clip-path: polygon(
     0% 0%,
-    0% 0%,      0% 8%,     0% 16%,    0% 24%,
-    0% 32%,     0% 40%,    0% 48%,    0% 56%,
-    0% 64%,     0% 72%,    0% 80%,    0% 88%,
+    0% 0%,      0% 4%,     0% 9%,     0% 14%,
+    0% 20%,     0% 25%,    0% 31%,    0% 36%,
+    0% 42%,     0% 48%,    0% 54%,    0% 59%,
+    0% 65%,     0% 71%,    0% 77%,    0% 83%,
+    0% 89%,     0% 95%,
     0% 100%,
     0% 100%
   );
@@ -407,8 +427,11 @@ body {
 }
 
 .layer-new .my-services {
-  background:
-    linear-gradient(180deg, #0b1f2d 0%, #112b3d 100%);
+  background-color: #0b1f2d;
+  background-image: url(../img/laptop.jpg);
+  background-size: cover;
+  background-blend-mode: overlay;
+  background-attachment: fixed;
 }
 
 .layer-new .section__title--services {
@@ -575,6 +598,10 @@ body {
     transform: translateY(-10px);
   }
 }
+
+/* data-px: speed factor applied by JS on every scroll frame.
+   JS sets inline transform + opacity directly. CSS just opts in. */
+
 
 @media (max-width: 900px) {
   .layer .nav-toggle {
