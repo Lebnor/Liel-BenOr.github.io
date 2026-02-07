@@ -482,9 +482,13 @@ body {
 }
 
 .layer-new .about-me {
-  background:
+  background-color: #0b1f2e;
+  background-image:
     radial-gradient(circle at 82% 35%, rgba(69, 217, 255, 0.12), transparent 44%),
-    #0b1f2e;
+    url(../img/bg/cyber-wave.jpg);
+  background-size: cover;
+  background-blend-mode: overlay;
+  background-attachment: fixed;
 }
 
 .layer-new .section__title--about {
@@ -511,7 +515,13 @@ body {
 }
 
 .layer-new .my-work {
-  background: linear-gradient(180deg, #0f2a3c 0%, #0b1f2d 100%);
+  background-color: #0f2a3c;
+  background-image:
+    linear-gradient(180deg, rgba(15, 42, 60, 0.85) 0%, rgba(11, 31, 45, 0.9) 100%),
+    url(../img/bg/neon-landscape.jpg);
+  background-size: cover;
+  background-blend-mode: normal, normal;
+  background-attachment: scroll, fixed;
 }
 
 .layer-new .section__title--work {
@@ -541,6 +551,16 @@ body {
   font-family: var(--new-font);
 }
 
+.layer-new .resume {
+  background-color: #0a1c2a;
+  background-image:
+    linear-gradient(180deg, rgba(10, 28, 42, 0.88), rgba(10, 28, 42, 0.92)),
+    url(../img/bg/code-screen.jpg);
+  background-size: cover;
+  background-blend-mode: normal, normal;
+  background-attachment: scroll, fixed;
+}
+
 .layer-new .section__title--resume {
   font-family: var(--new-font);
   color: var(--new-fg);
@@ -556,7 +576,13 @@ body {
 }
 
 .layer-new .footer {
-  background: #05131d;
+  background-color: #05131d;
+  background-image:
+    linear-gradient(180deg, rgba(5, 19, 29, 0.92), rgba(5, 19, 29, 0.88)),
+    url(../img/bg/dark-space.jpg);
+  background-size: cover;
+  background-blend-mode: normal, normal;
+  background-attachment: scroll, fixed;
   border-top: 1px solid rgba(69, 217, 255, 0.2);
 }
 
