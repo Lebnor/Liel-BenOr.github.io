@@ -6,17 +6,12 @@ app = Flask(__name__)
 
 @app.route('/')
 def main():
-    return render_template("prototype.html")
-
-
-@app.route('/prototype')
-def prototype():
-    return render_template("prototype.html")
+    return render_template("index.html")
 
 
 @app.route('/2022')
 def legacy_2022():
-    return render_template("index.html")
+    return render_template("legacy.html")
 
 
 @app.route('/projects/<name>')
