@@ -470,6 +470,7 @@ header {
   background-image: url(img/laptop.jpg);
   background-size: cover;
   background-blend-mode: overlay;
+  background-attachment: fixed;
   color: var(--clr-light);
   text-align: center;
 }
