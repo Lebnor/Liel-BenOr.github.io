@@ -1,7 +1,7 @@
 /* ==========================================================================
    Torn page interactions
-   - Default: narrow center reveal
-   - Hover left/right: reveal that side from the tear
+   - Default: 50/50 split with neutral center zone
+   - Hover left/right: reveal that side style across whole page
    ========================================================================== */
 
 (function () {
@@ -18,16 +18,31 @@
   var activeSide = "";
   var isMobile = window.matchMedia("(max-width: 900px)").matches;
   var hasHover = window.matchMedia("(hover: hover)").matches;
+  var neutralZoneHalfWidth = 110;
   var navToggles = document.querySelectorAll(".nav-toggle");
   var navLinks = document.querySelectorAll(".nav__link");
 
+  function updateNeutralZoneWidth() {
+    var rootStyles = window.getComputedStyle(document.documentElement);
+    var configured = parseInt(rootStyles.getPropertyValue("--neutral-zone-width"), 10);
+    if (!Number.isNaN(configured) && configured > 0) {
+      neutralZoneHalfWidth = Math.round(configured / 2);
+    } else {
+      neutralZoneHalfWidth = 110;
+    }
+  }
+
   function sideFromX(x) {
+    var mid = window.innerWidth / 2;
+    if (Math.abs(x - mid) <= neutralZoneHalfWidth) {
+      return "center";
+    }
     return x < window.innerWidth / 2 ? "left" : "right";
   }
 
   function clearState() {
     activeSide = "";
-    wrapper.classList.remove("hover-left", "hover-right");
+    wrapper.classList.remove("hover-left", "hover-right", "hover-center");
   }
 
   function syncContainerHeight() {
@@ -53,18 +68,25 @@
     activeSide = side;
     wrapper.classList.toggle("hover-left", side === "left");
     wrapper.classList.toggle("hover-right", side === "right");
+    wrapper.classList.toggle("hover-center", side === "center");
   }
 
   function onPointerMove(event) {
     if (isMobile || !hasHover) {
       return;
     }
+
+    if (event.pointerType && event.pointerType !== "mouse" && event.pointerType !== "pen") {
+      return;
+    }
+
     setSide(sideFromX(event.clientX));
   }
 
   function onResize() {
     isMobile = window.matchMedia("(max-width: 900px)").matches;
     hasHover = window.matchMedia("(hover: hover)").matches;
+    updateNeutralZoneWidth();
     syncContainerHeight();
     if (isMobile || !hasHover) {
       clearState();
@@ -81,8 +103,7 @@
       return;
     }
 
-    wrapper.classList.toggle("hover-left", sideFromX(touch.clientX) === "left");
-    wrapper.classList.toggle("hover-right", sideFromX(touch.clientX) === "right");
+    setSide(sideFromX(touch.clientX));
   }
 
   function onTouchEnd() {
@@ -91,8 +112,7 @@
     }
   }
 
-  wrapper.addEventListener("pointermove", onPointerMove);
-  wrapper.addEventListener("pointerleave", clearState);
+  window.addEventListener("pointermove", onPointerMove);
   window.addEventListener("resize", onResize);
   window.addEventListener("blur", clearState);
   window.addEventListener("load", syncContainerHeight);
@@ -128,5 +148,6 @@
   });
 
   syncContainerHeight();
+  updateNeutralZoneWidth();
   window.setTimeout(syncContainerHeight, 250);
 })();
