@@ -15,6 +15,7 @@
   var container = document.getElementById("prototype-container");
   var layerOld = wrapper.querySelector(".layer-old");
   var layerNew = wrapper.querySelector(".layer-new");
+  var neutralZone = wrapper.querySelector(".neutral-zone");
   var activeSide = "";
   var isMobile = window.matchMedia("(max-width: 900px)").matches;
   var hasHover = window.matchMedia("(hover: hover)").matches;

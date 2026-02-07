@@ -67,6 +67,10 @@ body {
 
 .layer-new {
   z-index: 3;
+  filter:
+    drop-shadow(0 0 2px rgba(69, 217, 255, 0.9))
+    drop-shadow(0 0 6px rgba(69, 217, 255, 0.6))
+    drop-shadow(0 0 14px rgba(33, 150, 243, 0.35));
   clip-path: polygon(
     50% 0%,     51.2% 4%,  49.4% 9%,  50.8% 14%,
     49.1% 20%,  51.4% 25%, 49.6% 31%, 50.9% 36%,
@@ -163,6 +167,7 @@ body {
     100% 0%
   );
   pointer-events: none;
+  filter: none;
 }
 
 .prototype-wrapper.hover-right .layer-new {
@@ -177,6 +182,7 @@ body {
     100% 0%
   );
   z-index: 6;
+  filter: none;
 }
 
 .prototype-wrapper.hover-right .layer-old {
@@ -210,6 +216,38 @@ body {
 
 /* ── Glitch seam effect ── */
 
+.seam-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 4;
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity var(--style-shift-duration) var(--style-shift-ease);
+  background: rgba(220, 245, 255, 0.95);
+  clip-path: polygon(
+    50.25% 0%,   51.45% 4%,  49.65% 9%,  51.05% 14%,
+    49.35% 20%,  51.65% 25%, 49.85% 31%, 51.15% 36%,
+    49.05% 42%,  51.35% 48%, 49.55% 54%, 51.55% 59%,
+    49.25% 65%,  50.95% 71%, 49.15% 77%, 51.45% 83%,
+    49.75% 89%,  50.85% 95%,
+    50.25% 100%,
+    49.75% 100%,
+    50.35% 95%,  49.25% 89%, 50.95% 83%, 48.65% 77%,
+    50.45% 71%,  48.75% 65%, 51.05% 59%, 49.05% 54%,
+    50.85% 48%,  48.55% 42%, 50.65% 36%, 49.35% 31%,
+    51.15% 25%,  48.85% 20%, 50.55% 14%, 49.15% 9%,
+    50.95% 4%,   49.75% 0%
+  );
+  filter:
+    drop-shadow(0 0 6px rgba(69, 217, 255, 1))
+    drop-shadow(0 0 18px rgba(69, 217, 255, 0.7))
+    drop-shadow(0 0 40px rgba(33, 150, 243, 0.4));
+  animation: seam-pulse 4s ease-in-out infinite;
+}
+
 .neutral-zone::before,
 .neutral-zone::after {
   content: "";
@@ -220,26 +258,7 @@ body {
 }
 
 .neutral-zone::before {
-  top: 0;
-  bottom: 0;
-  width: 3px;
-  background: linear-gradient(
-    180deg,
-    rgba(69, 217, 255, 0.0) 0%,
-    rgba(69, 217, 255, 0.8) 8%,
-    rgba(255, 203, 102, 0.5) 20%,
-    rgba(33, 150, 243, 0.7) 35%,
-    rgba(69, 217, 255, 0.6) 50%,
-    rgba(255, 203, 102, 0.4) 65%,
-    rgba(33, 150, 243, 0.75) 80%,
-    rgba(69, 217, 255, 0.7) 92%,
-    rgba(69, 217, 255, 0.0) 100%
-  );
-  box-shadow:
-    0 0 8px 3px rgba(69, 217, 255, 0.4),
-    0 0 24px 6px rgba(69, 217, 255, 0.18),
-    0 0 48px 12px rgba(33, 150, 243, 0.08);
-  animation: seam-pulse 3s ease-in-out infinite;
+  display: none;
 }
 
 .neutral-zone::after {
@@ -278,10 +297,18 @@ body {
 .gb8 { top: 87%;  width: 35px;  animation-delay: 1.8s;  background: rgba(255, 203, 102, 0.6); height: 3px; box-shadow: 0 0 8px rgba(255, 203, 102, 0.3); }
 
 @keyframes seam-pulse {
-  0%, 100% { opacity: 0.7; filter: blur(0px); }
-  25%      { opacity: 1;   filter: blur(0.5px); }
-  50%      { opacity: 0.5; filter: blur(0px); }
-  75%      { opacity: 0.9; filter: blur(1px); }
+  0%       { filter: drop-shadow(0 0 6px rgba(69,217,255,1))   drop-shadow(0 0 18px rgba(69,217,255,0.7))  drop-shadow(0 0 40px rgba(33,150,243,0.4)); }
+  8%       { filter: drop-shadow(0 0 10px rgba(69,217,255,1))  drop-shadow(0 0 28px rgba(69,217,255,0.85)) drop-shadow(0 0 56px rgba(33,150,243,0.5)); }
+  12%      { filter: drop-shadow(0 0 4px rgba(69,217,255,0.8)) drop-shadow(0 0 14px rgba(69,217,255,0.5))  drop-shadow(0 0 30px rgba(33,150,243,0.25)); }
+  20%      { filter: drop-shadow(0 0 8px rgba(69,217,255,1))   drop-shadow(0 0 22px rgba(69,217,255,0.75)) drop-shadow(0 0 48px rgba(33,150,243,0.45)); }
+  35%      { filter: drop-shadow(0 0 3px rgba(69,217,255,0.6)) drop-shadow(0 0 10px rgba(69,217,255,0.4))  drop-shadow(0 0 24px rgba(33,150,243,0.2)); }
+  42%      { filter: drop-shadow(0 0 12px rgba(69,217,255,1))  drop-shadow(0 0 30px rgba(69,217,255,0.9))  drop-shadow(0 0 60px rgba(33,150,243,0.5)); }
+  50%      { filter: drop-shadow(0 0 5px rgba(69,217,255,0.7)) drop-shadow(0 0 16px rgba(69,217,255,0.5))  drop-shadow(0 0 34px rgba(33,150,243,0.3)); }
+  65%      { filter: drop-shadow(0 0 9px rgba(69,217,255,1))   drop-shadow(0 0 24px rgba(69,217,255,0.8))  drop-shadow(0 0 50px rgba(33,150,243,0.45)); }
+  72%      { filter: drop-shadow(0 0 3px rgba(69,217,255,0.5)) drop-shadow(0 0 8px rgba(69,217,255,0.35))  drop-shadow(0 0 20px rgba(33,150,243,0.15)); }
+  80%      { filter: drop-shadow(0 0 11px rgba(69,217,255,1))  drop-shadow(0 0 26px rgba(69,217,255,0.85)) drop-shadow(0 0 52px rgba(33,150,243,0.5)); }
+  90%      { filter: drop-shadow(0 0 6px rgba(69,217,255,0.8)) drop-shadow(0 0 18px rgba(69,217,255,0.6))  drop-shadow(0 0 38px rgba(33,150,243,0.35)); }
+  100%     { filter: drop-shadow(0 0 6px rgba(69,217,255,1))   drop-shadow(0 0 18px rgba(69,217,255,0.7))  drop-shadow(0 0 40px rgba(33,150,243,0.4)); }
 }
 
 @keyframes scanlines-drift {
@@ -306,7 +333,9 @@ body {
 }
 
 .prototype-wrapper.hover-left .neutral-zone,
-.prototype-wrapper.hover-right .neutral-zone {
+.prototype-wrapper.hover-right .neutral-zone,
+.prototype-wrapper.hover-left .seam-line,
+.prototype-wrapper.hover-right .seam-line {
   opacity: 0;
 }
 
@@ -316,6 +345,8 @@ body {
   height: 0;
   overflow: hidden;
 }
+
+
 
 /* =====================================================================
    New Layer Styling (same markup, fully modern look)
@@ -686,7 +717,8 @@ body {
   .layer-new::before,
   .layer-old::after,
   .layer-new::after,
-  .neutral-zone {
+  .neutral-zone,
+  .seam-line {
     display: none;
   }
 
