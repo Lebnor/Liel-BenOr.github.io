@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>Liel BenOr | Website Through Time</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Liel Ben-Or portfolio with interactive split-era styling" />
+  <link rel="icon" type="image/x-icon" href="/static/img/icon192.png" />
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css"
+    integrity="sha256-46qynGAkLSFpVbEBog43gvNhfrOj+BmwXdxFgVK/Kvc=" crossorigin="anonymous" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Alef&family=Cousine&family=Space+Grotesk:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" type="text/css" href="/static/styles.css" />
+  <link rel="stylesheet" href="/static/css/site.css" />
+</head>
+<body>
+  <svg class="svg-defs" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <clipPath id="clip-old" clipPathUnits="objectBoundingBox">
+        <path id="tear-path-old" d="
+          M 0,0
+          L 0.50,0  L 0.504,0.08  L 0.498,0.16  L 0.505,0.24
+          L 0.497,0.32  L 0.503,0.40  L 0.496,0.48  L 0.504,0.56
+          L 0.498,0.64  L 0.505,0.72  L 0.497,0.80  L 0.503,0.88
+          L 0.50,1.0  L 0,1 Z" />
+      </clipPath>
+      <clipPath id="clip-new" clipPathUnits="objectBoundingBox">
+        <path id="tear-path-new" d="
+          M 0.50,0  L 1,0  L 1,1  L 0.50,1.0
+          L 0.503,0.88  L 0.497,0.80  L 0.505,0.72  L 0.498,0.64
+          L 0.504,0.56  L 0.496,0.48  L 0.503,0.40  L 0.497,0.32
+          L 0.505,0.24  L 0.498,0.16  L 0.504,0.08  L 0.50,0 Z" />
+      </clipPath>
+    </defs>
+  </svg>
+
+  <div class="prototype-wrapper" id="prototype-wrapper">
+    <button class="pin-btn pin-btn--left" id="pin-left" aria-label="Pin old style" title="Pin this style">
+      <span class="pin-icon"></span>
+    </button>
+    <button class="pin-btn pin-btn--right" id="pin-right" aria-label="Pin new style" title="Pin this style">
+      <span class="pin-icon"></span>
+    </button>
+    <div class="neutral-zone" aria-hidden="true">
+      <div class="glitch-bar gb1"></div>
+      <div class="glitch-bar gb2"></div>
+      <div class="glitch-bar gb3"></div>
+      <div class="glitch-bar gb4"></div>
+      <div class="glitch-bar gb5"></div>
+      <div class="glitch-bar gb6"></div>
+      <div class="glitch-bar gb7"></div>
+      <div class="glitch-bar gb8"></div>
+    </div>
+
+    <div class="prototype-container" id="prototype-container">
+      <div class="seam-line" aria-hidden="true"></div>
+      <div class="layer layer-old">
+        <header class="nav-header">
+          <div class="logo">
+            <a href="#home-old"><img src="/static/img/icon192.png" alt="" /></a>
+          </div>
+          <button class="nav-toggle" aria-label="toggle navigation">
+            <span class="hamburger"></span>
+          </button>
+          <nav class="nav">
+            <ul class="nav__list">
+              <li class="nav__item"><a href="#home-old" class="nav__link">Home</a></li>
+              <li class="nav__item"><a href="#services-old" class="nav__link">My skills</a></li>
+              <li class="nav__item"><a href="#about-me-old" class="nav__link">About me</a></li>
+              <li class="nav__item"><a href="#work-old" class="nav__link">My projects</a></li>
+              <li class="nav__item"><a href="#resume-old" class="nav__link">My resume</a></li>
+            </ul>
+          </nav>
+        </header>
+        <section class="intro fade-down" id="home-old">
+          <div class="section__title section__title--intro typewriter-container">
+            <h1 class="typewriter head">Hi, I am</h1>
+            <h1 class="typewriter sub">Liel Ben-Or</h1>
+          </div>
+          <p class="section__subtitle section__subtitle--intro">full-stack developer</p>
+          <img class="intro__img" src="/static/img/me.png" alt="" />
+        </section>
+        <div class="greeting"><p>Nice to meet you!</p></div>
+        <section class="my-services" id="services-old">
+          <div class="fade-up-container">
+            <h2 class="section__title section__title--services">What I do</h2>
+            <div class="services">
+              <div class="service">
+                <h3>Backend</h3>
+                <p>I use Flask and Django frameworks to create REST API for my web apps</p>
+                <ul class="tech-stack">
+                  <li class="tech-stack__item"><img alt="" src="/static/img/tech-stack/java.png" /></li>
+                  <li class="tech-stack__item"><img alt="" src="/static/img/tech-stack/python.png" /></li>
+                  <li class="tech-stack__item"><img alt="" src="/static/img/tech-stack/flask.png" /></li>
+                  <li class="tech-stack__item"><img alt="" src="/static/img/tech-stack/django.png" /></li>
+                  <li class="tech-stack__item"><img alt="" src="/static/img/tech-stack/mongodb.png" /></li>
+                  <li class="tech-stack__item"><img alt="" src="/static/img/tech-stack/mysql.png" /></li>
+                  <li class="tech-stack__item"><img alt="" src="/static/img/tech-stack/git.png" /></li>
+                </ul>
+              </div>
+              <div class="service">
+                <h3>Frontend</h3>
+                <p>I use HTML, CSS, Javascript and React to implement the Frontend</p>
+                <ul class="tech-stack">
+                  <li class="tech-stack__item"><img alt="" src="/static/img/tech-stack/html.png" /></li>
+                  <li class="tech-stack__item"><img alt="" src="/static/img/tech-stack/css.png" /></li>
+                  <li class="tech-stack__item"><img alt="" src="/static/img/tech-stack/javascript.png" /></li>
+                  <li class="tech-stack__item"><img alt="" src="/static/img/tech-stack/react.png" /></li>
+                  <li class="tech-stack__item"><img alt="" src="/static/img/tech-stack/bootstrap.png" /></li>
+                  <li class="tech-stack__item"><img alt="" src="/static/img/tech-stack/webpack.png" /></li>
+                  <li class="tech-stack__item"><img alt="" src="/static/img/tech-stack/babel.png" /></li>
+                </ul>
+              </div>
+              <div class="service">
+                <h3>Cloud practitioner</h3>
+                <p>Serverless apps, AWS services, CI/CD pipelines</p>
+                <ul class="tech-stack">
+                  <li class="tech-stack__item"><img alt="" class="tech-stack__img" src="/static/img/tech-stack/aws.png" /></li>
+                  <li class="tech-stack__item"><img alt="" class="tech-stack__img" src="/static/img/tech-stack/azuredevops.png" /></li>
+                  <li class="tech-stack__item"><img alt="" class="tech-stack__img" src="/static/img/tech-stack/jenkins.png" /></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <a href="#work-old" class="btn btn-blue">My Projects</a>
+        </section>
+        <section class="about-me" id="about-me-old">
+          <h2 class="section__title section__title--about">Who I am</h2>
+          <p class="section__subtitle section__subtitle--about">Student and self-taught developer</p>
+          <div class="about-me__body">
+            <p>I study computer science at the open university of Israel since 2020 and I combine my formal education with independant self learning, by using online resources such as Udemy, helsinki and haravrd's MOOC to learn how to program.</p>
+            <p>I make online tools such as browser extensions, build web apps such as an e-commerce, and Java games like snake or chess.</p>
+            <p>And most importantly, I ❤️ what I do!</p>
+          </div>
+          <img src="/static/img/icon192.png" alt="" class="about-me__img" />
+        </section>
+        <section class="my-work" id="work-old">
+          <h2 class="section__title section__title--work">My Projects</h2>
+          <p class="section__subtitle section__subtitle--work">A selection of my projects</p>
+          <div class="portfolio">
+            <a href="projects/popsi-colada.html" class="portfolio__item">
+              <img src="/static/img/projects/popsi-colada.png" alt="" class="portfolio__img" />
+              <span class="portfolio__text">Popsi Colada</span>
+            </a>
+            <a href="projects/angular-file-generator.html" class="portfolio__item">
+              <img src="/static/img/projects/angular-file-generator-main.png" width="100%" alt="" class="portfolio__img" />
+              <span class="portfolio__text">Angular File Generator</span>
+            </a>
+            <a href="projects/network.html" class="portfolio__item">
+              <img src="/static/img/projects/network.png" width="100%" alt="" class="portfolio__img" />
+              <span class="portfolio__text">Network</span>
+            </a>
+            <a href="projects/commerce.html" class="portfolio__item">
+              <img src="/static/img/projects/commerce.png" alt="" class="portfolio__img" />
+              <span class="portfolio__text">Commerce</span>
+            </a>
+            <a href="projects/wiki.html" class="portfolio__item">
+              <img src="/static/img/projects/wiki.png" alt="" class="portfolio__img" />
+              <span class="portfolio__text">Wiki</span>
+            </a>
+            <a href="projects/weekly-planner.html" class="portfolio__item">
+              <img src="/static/img/projects/extension.png" alt="" class="portfolio__img" />
+              <span class="portfolio__text">Weekly Planner</span>
+            </a>
+            <a href="projects/fractals.html" class="portfolio__item">
+              <img src="/static/img/projects/fractals-main.png" alt="" class="portfolio__img portfolio__item-mobile" />
+              <span class="portfolio__text">Fractals</span>
+            </a>
+            <div class="portfolio__item">
+              <p>Planned project:</p>
+              <p>Sudoku solver</p>
+            </div>
+          </div>
+          <p>And more coming soon...</p>
+        </section>
+        <section class="resume" id="resume-old">
+          <h2 class="section__title section__title--resume">My resume</h2>
+          <div class="embed-resume">
+            <a href="/static/img/liel_ben_or_resume.pdf" target="_blank">View resume<span style="margin-right: 0.25em"></span><i class="fas fa-external-link-alt"></i></a>
+          </div>
+        </section>
+        <footer class="footer">
+          <a href="mailto:liel4349@gmail.com" class="footer__link"><i class="fa fa-envelope" aria-hidden="true"></i> Contact Me</a>
+          <ul class="social-list">
+            <li class="social-list__link"><a href="https://github.com/lebnor"><i class="fab fa-github"> github</i></a></li>
+            <li class="social-list__link"><a href="https://www.linkedin.com/in/liel-ben-or-145b64189/"><i class="fab fa-linkedin-in"> linked-in</i></a></li>
+          </ul>
+          <p class="repository-text">See the source code for this site in
+            <a href="https://github.com/Lebnor/Liel-BenOr.github.io" target="_blank">
+              <span class="repository-link">github <i class="fas fa-external-link-alt"></i></span>
+            </a>
+          </p>
+        </footer>
+      </div>
+
+      <div class="layer layer-new">
+        <header class="nav-header">
+          <div class="logo">
+            <a href="#home-new"><img src="/static/img/icon192.png" alt="" /></a>
+          </div>
+          <button class="nav-toggle" aria-label="toggle navigation">
+            <span class="hamburger"></span>
+          </button>
+          <nav class="nav">
+            <ul class="nav__list">
+              <li class="nav__item"><a href="#home-new" class="nav__link">Home</a></li>
+              <li class="nav__item"><a href="#services-new" class="nav__link">My skills</a></li>
+              <li class="nav__item"><a href="#about-me-new" class="nav__link">About me</a></li>
+              <li class="nav__item"><a href="#work-new" class="nav__link">My projects</a></li>
+              <li class="nav__item"><a href="#resume-new" class="nav__link">My resume</a></li>
+            </ul>
+          </nav>
+        </header>
+        <section class="intro fade-down" id="home-new">
+          <div class="section__title section__title--intro typewriter-container">
+            <h1 class="typewriter head" data-reveal="wipe-right">Hi, I am</h1>
+            <h1 class="typewriter sub" data-reveal="slide-right" data-reveal-delay="2">Liel Ben-Or</h1>
+          </div>
+          <p class="section__subtitle section__subtitle--intro" data-reveal="slide-up" data-reveal-delay="3">Full Stack Developer</p>
+          <img class="intro__img" src="/static/img/me.png" alt="" data-reveal="zoom-in" data-reveal-delay="1" />
+        </section>
+        <div class="greeting" data-reveal="fade"><p>I build things that work. Then I rebuild them better.</p></div>
+        <section class="my-services" id="services-new">
+          <div class="fade-up-container">
+            <h2 class="section__title section__title--services" data-reveal="wipe-center">What I bring to the table</h2>
+            <div class="services">
+              <div class="service" data-reveal="flip-up" data-reveal-delay="1">
+                <h3>Backend &amp; AI</h3>
+                <p>From REST APIs to inference pipelines — I build the systems behind the product.</p>
+                <ul class="tech-stack">
+                  <li class="tech-stack__item"><img alt="" src="/static/img/tech-stack/java.png" /></li>
+                  <li class="tech-stack__item"><img alt="" src="/static/img/tech-stack/python.png" /></li>
+                  <li class="tech-stack__item"><img alt="" src="/static/img/tech-stack/flask.png" /></li>
+                  <li class="tech-stack__item"><img alt="" src="/static/img/tech-stack/django.png" /></li>
+                  <li class="tech-stack__item"><img alt="" src="/static/img/tech-stack/mongodb.png" /></li>
+                  <li class="tech-stack__item"><img alt="" src="/static/img/tech-stack/mysql.png" /></li>
+                  <li class="tech-stack__item"><img alt="" src="/static/img/tech-stack/git.png" /></li>
+                </ul>
+              </div>
+              <div class="service" data-reveal="flip-left" data-reveal-delay="2">
+                <h3>Frontend</h3>
+                <p>Interfaces that earn trust. If the user has to think about the UI, I've failed.</p>
+                <ul class="tech-stack">
+                  <li class="tech-stack__item"><img alt="" src="/static/img/tech-stack/html.png" /></li>
+                  <li class="tech-stack__item"><img alt="" src="/static/img/tech-stack/css.png" /></li>
+                  <li class="tech-stack__item"><img alt="" src="/static/img/tech-stack/javascript.png" /></li>
+                  <li class="tech-stack__item"><img alt="" src="/static/img/tech-stack/react.png" /></li>
+                  <li class="tech-stack__item"><img alt="" src="/static/img/tech-stack/bootstrap.png" /></li>
+                  <li class="tech-stack__item"><img alt="" src="/static/img/tech-stack/webpack.png" /></li>
+                  <li class="tech-stack__item"><img alt="" src="/static/img/tech-stack/babel.png" /></li>
+                </ul>
+              </div>
+              <div class="service" data-reveal="sweep-in" data-reveal-delay="3">
+                <h3>Infra &amp; Ops</h3>
+                <p>CI/CD, cloud, monitoring. The unglamorous work that makes everything else possible.</p>
+                <ul class="tech-stack">
+                  <li class="tech-stack__item"><img alt="" class="tech-stack__img" src="/static/img/tech-stack/aws.png" /></li>
+                  <li class="tech-stack__item"><img alt="" class="tech-stack__img" src="/static/img/tech-stack/azuredevops.png" /></li>
+                  <li class="tech-stack__item"><img alt="" class="tech-stack__img" src="/static/img/tech-stack/jenkins.png" /></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <a href="#work-new" class="btn btn-blue" data-reveal="pop" data-reveal-delay="4">See my work</a>
+        </section>
+        <section class="about-me" id="about-me-new">
+          <h2 class="section__title section__title--about" data-reveal="slide-down">Who I am</h2>
+          <p class="section__subtitle section__subtitle--about" data-reveal="slide-right" data-reveal-delay="1">Engineer who ships</p>
+          <div class="about-me__body" data-reveal="slide-left" data-reveal-delay="2">
+            <p>I studied computer science at the Open University of Israel and never stopped learning after that.</p>
+            <p>These days I work across the full stack — from system design to polished UI — with a focus on AI-powered products.</p>
+            <p>I care about the craft. Even the parts no one sees.</p>
+          </div>
+          <img src="/static/img/icon192.png" alt="" class="about-me__img" data-reveal="spin-in" data-reveal-delay="2" />
+        </section>
+        <section class="my-work" id="work-new">
+          <h2 class="section__title section__title--work" data-reveal="wipe-up">Selected work</h2>
+          <p class="section__subtitle section__subtitle--work" data-reveal="slide-left" data-reveal-delay="1">Things I've built</p>
+          <div class="portfolio">
+            <a href="projects/popsi-colada.html" class="portfolio__item" data-reveal="pop" data-reveal-delay="1">
+              <img src="/static/img/projects/popsi-colada.png" alt="" class="portfolio__img" />
+              <span class="portfolio__text">Popsi Colada</span>
+            </a>
+            <a href="projects/angular-file-generator.html" class="portfolio__item" data-reveal="slide-up" data-reveal-delay="2">
+              <img src="/static/img/projects/angular-file-generator-main.png" width="100%" alt="" class="portfolio__img" />
+              <span class="portfolio__text">Angular File Generator</span>
+            </a>
+            <a href="projects/network.html" class="portfolio__item" data-reveal="flip-up" data-reveal-delay="3">
+              <img src="/static/img/projects/network.png" width="100%" alt="" class="portfolio__img" />
+              <span class="portfolio__text">Network</span>
+            </a>
+            <a href="projects/commerce.html" class="portfolio__item" data-reveal="sweep-in" data-reveal-delay="1">
+              <img src="/static/img/projects/commerce.png" alt="" class="portfolio__img" />
+              <span class="portfolio__text">Commerce</span>
+            </a>
+            <a href="projects/wiki.html" class="portfolio__item" data-reveal="zoom-out" data-reveal-delay="2">
+              <img src="/static/img/projects/wiki.png" alt="" class="portfolio__img" />
+              <span class="portfolio__text">Wiki</span>
+            </a>
+            <a href="projects/weekly-planner.html" class="portfolio__item" data-reveal="drop" data-reveal-delay="3">
+              <img src="/static/img/projects/extension.png" alt="" class="portfolio__img" />
+              <span class="portfolio__text">Weekly Planner</span>
+            </a>
+            <a href="projects/fractals.html" class="portfolio__item" data-reveal="flip-left" data-reveal-delay="4">
+              <img src="/static/img/projects/fractals-main.png" alt="" class="portfolio__img portfolio__item-mobile" />
+              <span class="portfolio__text">Fractals</span>
+            </a>
+            <div class="portfolio__item" data-reveal="spin-in" data-reveal-delay="5">
+              <p>Planned project:</p>
+              <p>Sudoku solver</p>
+            </div>
+          </div>
+          <p data-reveal="fade">More on the way. Always.</p>
+        </section>
+        <section class="resume" id="resume-new">
+          <h2 class="section__title section__title--resume" data-reveal="slide-down">My resume</h2>
+          <div class="embed-resume" data-reveal="pop" data-reveal-delay="1">
+            <a href="/static/img/liel_ben_or_resume.pdf" target="_blank">View resume<span style="margin-right: 0.25em"></span><i class="fas fa-external-link-alt"></i></a>
+          </div>
+        </section>
+        <footer class="footer">
+          <a href="mailto:liel4349@gmail.com" class="footer__link" data-reveal="slide-up"><i class="fa fa-envelope" aria-hidden="true"></i> Contact Me</a>
+          <ul class="social-list" data-reveal="slide-right" data-reveal-delay="1">
+            <li class="social-list__link"><a href="https://github.com/lebnor"><i class="fab fa-github"> github</i></a></li>
+            <li class="social-list__link"><a href="https://www.linkedin.com/in/liel-ben-or-145b64189/"><i class="fab fa-linkedin-in"> linked-in</i></a></li>
+          </ul>
+          <p class="repository-text">See the source code for this site in
+            <a href="https://github.com/Lebnor/Liel-BenOr.github.io" target="_blank">
+              <span class="repository-link">github <i class="fas fa-external-link-alt"></i></span>
+            </a>
+          </p>
+        </footer>
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/js/site.js"></script>
+</body>
+</html>
