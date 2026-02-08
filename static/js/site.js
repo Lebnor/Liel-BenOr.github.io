@@ -17,11 +17,14 @@
   var layerNew = wrapper.querySelector(".layer-new");
   var neutralZone = wrapper.querySelector(".neutral-zone");
   var activeSide = "";
+  var pinnedSide = "";
   var isMobile = window.matchMedia("(max-width: 900px)").matches;
   var hasHover = window.matchMedia("(hover: hover)").matches;
   var neutralZoneHalfWidth = 110;
   var navToggles = document.querySelectorAll(".nav-toggle");
   var navLinks = document.querySelectorAll(".nav__link");
+  var pinLeft = document.getElementById("pin-left");
+  var pinRight = document.getElementById("pin-right");
 
   function updateNeutralZoneWidth() {
     var rootStyles = window.getComputedStyle(document.documentElement);
@@ -62,6 +65,10 @@
       return;
     }
 
+    if (pinnedSide) {
+      return;
+    }
+
     if (side === activeSide) {
       return;
     }
@@ -70,6 +77,24 @@
     wrapper.classList.toggle("hover-left", side === "left");
     wrapper.classList.toggle("hover-right", side === "right");
     wrapper.classList.toggle("hover-center", side === "center");
+  }
+
+  function pinSide(side) {
+    if (pinnedSide === side) {
+      pinnedSide = "";
+      pinLeft.classList.remove("pinned");
+      pinRight.classList.remove("pinned");
+      return;
+    }
+
+    pinnedSide = side;
+    pinLeft.classList.toggle("pinned", side === "left");
+    pinRight.classList.toggle("pinned", side === "right");
+
+    activeSide = side;
+    wrapper.classList.toggle("hover-left", side === "left");
+    wrapper.classList.toggle("hover-right", side === "right");
+    wrapper.classList.remove("hover-center");
   }
 
   function onPointerMove(event) {
@@ -90,6 +115,9 @@
     updateNeutralZoneWidth();
     syncContainerHeight();
     if (isMobile || !hasHover) {
+      pinnedSide = "";
+      pinLeft && pinLeft.classList.remove("pinned");
+      pinRight && pinRight.classList.remove("pinned");
       clearState();
     }
   }
@@ -134,16 +162,33 @@
     });
   });
 
+  if (pinLeft) {
+    pinLeft.addEventListener("click", function (event) {
+      event.stopPropagation();
+      pinSide("left");
+    });
+  }
+
+  if (pinRight) {
+    pinRight.addEventListener("click", function (event) {
+      event.stopPropagation();
+      pinSide("right");
+    });
+  }
+
   document.addEventListener("keydown", function (event) {
     if (event.key === "ArrowLeft") {
-      setSide("left");
+      pinSide("left");
     }
 
     if (event.key === "ArrowRight") {
-      setSide("right");
+      pinSide("right");
     }
 
     if (event.key === "Escape") {
+      pinnedSide = "";
+      pinLeft && pinLeft.classList.remove("pinned");
+      pinRight && pinRight.classList.remove("pinned");
       clearState();
     }
   });
@@ -151,5 +196,25 @@
   syncContainerHeight();
   updateNeutralZoneWidth();
   window.setTimeout(syncContainerHeight, 250);
+
+  var revealTargets = document.querySelectorAll(".layer-new [data-reveal]");
+
+  if (revealTargets.length > 0 && "IntersectionObserver" in window) {
+    var revealThreshold = window.matchMedia("(max-width: 900px)").matches ? 0.05 : 0.12;
+
+    var revealObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("revealed");
+        } else {
+          entry.target.classList.remove("revealed");
+        }
+      });
+    }, { threshold: revealThreshold });
+
+    revealTargets.forEach(function (el) {
+      revealObserver.observe(el);
+    });
+  }
 
 })();
