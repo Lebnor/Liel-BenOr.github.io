@@ -2,3 +2,16 @@ venv
 venv/
 
 .vercel
+
+# Screenshots and debug images
+*.png
+*.jpg
+!static/**/*.png
+!static/**/*.jpg
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Docs (local only)
+docs/
