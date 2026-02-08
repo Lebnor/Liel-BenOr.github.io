@@ -672,10 +672,9 @@ body {
   z-index: 60;
   width: 28px;
   height: 28px;
-  border: 1.5px solid rgba(0, 0, 0, 0.45);
+  border: 1.5px solid currentColor;
   border-radius: 50%;
   background: none;
-  color: rgba(0, 0, 0, 0.4);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -683,26 +682,35 @@ body {
   font-size: 11px;
   transition:
     color 200ms ease,
-    border-color 200ms ease;
+    border-color 200ms ease,
+    opacity 200ms ease;
   padding: 0;
-}
-
-.pin-btn:hover {
-  color: rgba(0, 0, 0, 0.7);
-  border-color: rgba(0, 0, 0, 0.7);
 }
 
 .pin-btn--left {
   left: 16px;
+  color: #000;
+}
+
+.pin-btn--left:hover {
+  color: #000;
+  opacity: 0.7;
 }
 
 .pin-btn--right {
   right: 16px;
+  color: #fff;
+}
+
+.pin-btn--right:hover {
+  color: #fff;
+  opacity: 0.7;
 }
 
 .pin-btn.pinned {
   color: var(--new-accent);
   border-color: var(--new-accent);
+  opacity: 1;
 }
 
 .pin-btn .pin-icon {
