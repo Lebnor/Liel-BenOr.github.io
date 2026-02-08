@@ -94,10 +94,13 @@ body {
 
 .layer-new .fade-down,
 .layer-new .fade-up-container,
-.layer-new .about-me,
+.layer-new .about-me {
+  opacity: 1 !important;
+  transform: none !important;
+  animation: none !important;
+}
+
 .layer-new .greeting {
-  opacity: unset;
-  transform: unset;
   animation: none !important;
 }
 
@@ -715,6 +718,164 @@ body {
   background: currentColor;
 }
 
+
+/* ── New-layer scroll reveal animations ── */
+
+.layer-new [data-reveal] {
+  opacity: 0;
+  will-change: opacity, transform, filter;
+  transition:
+    opacity 750ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 750ms cubic-bezier(0.22, 1, 0.36, 1),
+    filter 750ms cubic-bezier(0.22, 1, 0.36, 1),
+    clip-path 750ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ---- slide variants ---- */
+.layer-new [data-reveal="slide-up"]    { transform: translateY(60px); }
+.layer-new [data-reveal="slide-down"]  { transform: translateY(-60px); }
+.layer-new [data-reveal="slide-left"]  { transform: translateX(-80px); }
+.layer-new [data-reveal="slide-right"] { transform: translateX(80px); }
+
+/* ---- diagonal sweep ---- */
+.layer-new [data-reveal="sweep-in"]    { transform: translate(-40px, 40px) rotate(-3deg); }
+
+/* ---- soft zoom ---- */
+.layer-new [data-reveal="zoom-in"]     { transform: scale(0.85); }
+.layer-new [data-reveal="zoom-out"]    { transform: scale(1.15); filter: blur(4px); }
+
+/* ---- 3D card flip ---- */
+.layer-new [data-reveal="flip-up"] {
+  transform: perspective(800px) rotateX(40deg) translateY(30px);
+  transform-origin: bottom center;
+}
+.layer-new [data-reveal="flip-left"] {
+  transform: perspective(800px) rotateY(25deg) translateX(-30px);
+  transform-origin: right center;
+}
+
+/* ---- wipe (clip-path based) ---- */
+.layer-new [data-reveal="wipe-right"]  { transform: translateY(4px); }
+.layer-new [data-reveal="wipe-up"]     { transform: translateY(4px); }
+.layer-new [data-reveal="wipe-center"] { transform: translateY(4px); }
+
+/* ---- spring pop ---- */
+.layer-new [data-reveal="pop"] { transform: scale(0.6); }
+
+/* ---- elastic drop (falls in from above, bounces) ---- */
+.layer-new [data-reveal="drop"] { transform: translateY(-90px) scale(0.95); }
+
+/* ---- spin-in ---- */
+.layer-new [data-reveal="spin-in"] { transform: rotate(-12deg) scale(0.9); }
+
+/* ---- stagger-fade (generic, used with delays) ---- */
+.layer-new [data-reveal="fade"] { /* just opacity, no transform */ }
+
+/* ---- revealed state (shared) ---- */
+.layer-new [data-reveal].revealed {
+  opacity: 1;
+  transform: none;
+  filter: none;
+  clip-path: none;
+}
+
+/* ---- keyframe overrides for animations that need bounce / spring ---- */
+
+.layer-new [data-reveal="pop"].revealed {
+  animation: rv-pop 650ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+@keyframes rv-pop {
+  0%   { opacity: 0; transform: scale(0.6); }
+  50%  { opacity: 1; transform: scale(1.08); }
+  75%  { transform: scale(0.97); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.layer-new [data-reveal="drop"].revealed {
+  animation: rv-drop 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes rv-drop {
+  0%   { opacity: 0; transform: translateY(-90px) scale(0.95); }
+  55%  { opacity: 1; transform: translateY(8px) scale(1); }
+  72%  { transform: translateY(-4px); }
+  86%  { transform: translateY(2px); }
+  100% { opacity: 1; transform: none; }
+}
+
+.layer-new [data-reveal="flip-up"].revealed {
+  animation: rv-flip-up 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes rv-flip-up {
+  0%   { opacity: 0; transform: perspective(800px) rotateX(40deg) translateY(30px); }
+  50%  { opacity: 1; transform: perspective(800px) rotateX(-4deg) translateY(0); }
+  75%  { transform: perspective(800px) rotateX(2deg); }
+  100% { opacity: 1; transform: perspective(800px) rotateX(0deg); }
+}
+
+.layer-new [data-reveal="flip-left"].revealed {
+  animation: rv-flip-left 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes rv-flip-left {
+  0%   { opacity: 0; transform: perspective(800px) rotateY(25deg) translateX(-30px); }
+  50%  { opacity: 1; transform: perspective(800px) rotateY(-3deg) translateX(0); }
+  75%  { transform: perspective(800px) rotateY(1.5deg); }
+  100% { opacity: 1; transform: perspective(800px) rotateY(0deg); }
+}
+
+.layer-new [data-reveal="spin-in"].revealed {
+  animation: rv-spin 650ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes rv-spin {
+  0%   { opacity: 0; transform: rotate(-12deg) scale(0.9); }
+  60%  { opacity: 1; transform: rotate(2deg) scale(1.02); }
+  80%  { transform: rotate(-0.5deg) scale(1); }
+  100% { opacity: 1; transform: none; }
+}
+
+.layer-new [data-reveal="wipe-right"].revealed {
+  animation: rv-wipe-right 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes rv-wipe-right {
+  0%   { opacity: 1; clip-path: inset(0 100% 0 0); transform: translateY(4px); }
+  100% { opacity: 1; clip-path: inset(0 0% 0 0);   transform: none; }
+}
+
+.layer-new [data-reveal="wipe-up"].revealed {
+  animation: rv-wipe-up 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes rv-wipe-up {
+  0%   { opacity: 1; clip-path: inset(100% 0 0 0); transform: translateY(4px); }
+  100% { opacity: 1; clip-path: inset(0 0 0 0);    transform: none; }
+}
+
+.layer-new [data-reveal="wipe-center"].revealed {
+  animation: rv-wipe-center 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes rv-wipe-center {
+  0%   { opacity: 1; clip-path: inset(0 50% 0 50%); transform: translateY(4px); }
+  100% { opacity: 1; clip-path: inset(0 0% 0 0%);   transform: none; }
+}
+
+/* ---- delay utilities ---- */
+.layer-new [data-reveal-delay="1"]  { transition-delay: 80ms;  animation-delay: 80ms; }
+.layer-new [data-reveal-delay="2"]  { transition-delay: 160ms; animation-delay: 160ms; }
+.layer-new [data-reveal-delay="3"]  { transition-delay: 240ms; animation-delay: 240ms; }
+.layer-new [data-reveal-delay="4"]  { transition-delay: 320ms; animation-delay: 320ms; }
+.layer-new [data-reveal-delay="5"]  { transition-delay: 400ms; animation-delay: 400ms; }
+.layer-new [data-reveal-delay="6"]  { transition-delay: 480ms; animation-delay: 480ms; }
+.layer-new [data-reveal-delay="7"]  { transition-delay: 560ms; animation-delay: 560ms; }
+.layer-new [data-reveal-delay="8"]  { transition-delay: 640ms; animation-delay: 640ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  .layer-new [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    clip-path: none !important;
+    transition: none !important;
+    animation: none !important;
+  }
+}
 
 @media (max-width: 900px) {
   .pin-btn {

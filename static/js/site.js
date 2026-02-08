@@ -197,4 +197,24 @@
   updateNeutralZoneWidth();
   window.setTimeout(syncContainerHeight, 250);
 
+  var revealTargets = document.querySelectorAll(".layer-new [data-reveal]");
+
+  if (revealTargets.length > 0 && "IntersectionObserver" in window) {
+    var revealThreshold = window.matchMedia("(max-width: 900px)").matches ? 0.05 : 0.12;
+
+    var revealObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("revealed");
+        } else {
+          entry.target.classList.remove("revealed");
+        }
+      });
+    }, { threshold: revealThreshold });
+
+    revealTargets.forEach(function (el) {
+      revealObserver.observe(el);
+    });
+  }
+
 })();

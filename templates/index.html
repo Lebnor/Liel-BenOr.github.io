@@ -218,20 +218,20 @@
         </header>
         <section class="intro fade-down" id="home-new">
           <div class="section__title section__title--intro typewriter-container">
-            <h1 class="typewriter head">Now shipping with</h1>
-            <h1 class="typewriter sub">Liel Ben-Or</h1>
+            <h1 class="typewriter head" data-reveal="wipe-right">Hi, I am</h1>
+            <h1 class="typewriter sub" data-reveal="slide-right" data-reveal-delay="2">Liel Ben-Or</h1>
           </div>
-          <p class="section__subtitle section__subtitle--intro">AI-first full-stack engineer</p>
-          <img class="intro__img" src="/static/img/me.png" alt="" />
+          <p class="section__subtitle section__subtitle--intro" data-reveal="slide-up" data-reveal-delay="3">Full Stack Developer</p>
+          <img class="intro__img" src="/static/img/me.png" alt="" data-reveal="zoom-in" data-reveal-delay="1" />
         </section>
-        <div class="greeting"><p>Building products, agents, and systems that learn.</p></div>
+        <div class="greeting" data-reveal="fade"><p>I build things that work. Then I rebuild them better.</p></div>
         <section class="my-services" id="services-new">
           <div class="fade-up-container">
-            <h2 class="section__title section__title--services">What I build now</h2>
+            <h2 class="section__title section__title--services" data-reveal="wipe-center">What I bring to the table</h2>
             <div class="services">
-              <div class="service">
-                <h3>AI Backends</h3>
-                <p>Inference pipelines, retrieval APIs, and production-grade service orchestration.</p>
+              <div class="service" data-reveal="flip-up" data-reveal-delay="1">
+                <h3>Backend &amp; AI</h3>
+                <p>From REST APIs to inference pipelines — I build the systems behind the product.</p>
                 <ul class="tech-stack">
                   <li class="tech-stack__item"><img alt="" src="/static/img/tech-stack/java.png" /></li>
                   <li class="tech-stack__item"><img alt="" src="/static/img/tech-stack/python.png" /></li>
@@ -242,9 +242,9 @@
                   <li class="tech-stack__item"><img alt="" src="/static/img/tech-stack/git.png" /></li>
                 </ul>
               </div>
-              <div class="service">
-                <h3>Modern Frontend</h3>
-                <p>High-performance interfaces for workflows, copilots, and real-time feedback loops.</p>
+              <div class="service" data-reveal="flip-left" data-reveal-delay="2">
+                <h3>Frontend</h3>
+                <p>Interfaces that earn trust. If the user has to think about the UI, I've failed.</p>
                 <ul class="tech-stack">
                   <li class="tech-stack__item"><img alt="" src="/static/img/tech-stack/html.png" /></li>
                   <li class="tech-stack__item"><img alt="" src="/static/img/tech-stack/css.png" /></li>
@@ -255,9 +255,9 @@
                   <li class="tech-stack__item"><img alt="" src="/static/img/tech-stack/babel.png" /></li>
                 </ul>
               </div>
-              <div class="service">
-                <h3>Platform and MLOps</h3>
-                <p>Cloud automation, CI/CD, observability, and resilient deployment systems.</p>
+              <div class="service" data-reveal="sweep-in" data-reveal-delay="3">
+                <h3>Infra &amp; Ops</h3>
+                <p>CI/CD, cloud, monitoring. The unglamorous work that makes everything else possible.</p>
                 <ul class="tech-stack">
                   <li class="tech-stack__item"><img alt="" class="tech-stack__img" src="/static/img/tech-stack/aws.png" /></li>
                   <li class="tech-stack__item"><img alt="" class="tech-stack__img" src="/static/img/tech-stack/azuredevops.png" /></li>
@@ -266,66 +266,66 @@
               </div>
             </div>
           </div>
-          <a href="#work-new" class="btn btn-blue">See Recent Work</a>
+          <a href="#work-new" class="btn btn-blue" data-reveal="pop" data-reveal-delay="4">See my work</a>
         </section>
         <section class="about-me" id="about-me-new">
-          <h2 class="section__title section__title--about">Who I am</h2>
-          <p class="section__subtitle section__subtitle--about">Engineer, builder, and systems thinker</p>
-          <div class="about-me__body">
-            <p>I pair formal computer science foundations with rapid product execution, from architecture to polished UX.</p>
-            <p>My focus is on practical AI software: agentic workflows, retrieval systems, and full-stack products users actually keep.</p>
-            <p>Still curious, still shipping, and still improving every release.</p>
+          <h2 class="section__title section__title--about" data-reveal="slide-down">Who I am</h2>
+          <p class="section__subtitle section__subtitle--about" data-reveal="slide-right" data-reveal-delay="1">Engineer who ships</p>
+          <div class="about-me__body" data-reveal="slide-left" data-reveal-delay="2">
+            <p>I studied computer science at the Open University of Israel and never stopped learning after that.</p>
+            <p>These days I work across the full stack — from system design to polished UI — with a focus on AI-powered products.</p>
+            <p>I care about the craft. Even the parts no one sees.</p>
           </div>
-          <img src="/static/img/icon192.png" alt="" class="about-me__img" />
+          <img src="/static/img/icon192.png" alt="" class="about-me__img" data-reveal="spin-in" data-reveal-delay="2" />
         </section>
         <section class="my-work" id="work-new">
-          <h2 class="section__title section__title--work">Selected Builds</h2>
-          <p class="section__subtitle section__subtitle--work">From classic apps to AI-native products</p>
+          <h2 class="section__title section__title--work" data-reveal="wipe-up">Selected work</h2>
+          <p class="section__subtitle section__subtitle--work" data-reveal="slide-left" data-reveal-delay="1">Things I've built</p>
           <div class="portfolio">
-            <a href="projects/popsi-colada.html" class="portfolio__item">
+            <a href="projects/popsi-colada.html" class="portfolio__item" data-reveal="pop" data-reveal-delay="1">
               <img src="/static/img/projects/popsi-colada.png" alt="" class="portfolio__img" />
               <span class="portfolio__text">Popsi Colada</span>
             </a>
-            <a href="projects/angular-file-generator.html" class="portfolio__item">
+            <a href="projects/angular-file-generator.html" class="portfolio__item" data-reveal="slide-up" data-reveal-delay="2">
               <img src="/static/img/projects/angular-file-generator-main.png" width="100%" alt="" class="portfolio__img" />
               <span class="portfolio__text">Angular File Generator</span>
             </a>
-            <a href="projects/network.html" class="portfolio__item">
+            <a href="projects/network.html" class="portfolio__item" data-reveal="flip-up" data-reveal-delay="3">
               <img src="/static/img/projects/network.png" width="100%" alt="" class="portfolio__img" />
               <span class="portfolio__text">Network</span>
             </a>
-            <a href="projects/commerce.html" class="portfolio__item">
+            <a href="projects/commerce.html" class="portfolio__item" data-reveal="sweep-in" data-reveal-delay="1">
               <img src="/static/img/projects/commerce.png" alt="" class="portfolio__img" />
               <span class="portfolio__text">Commerce</span>
             </a>
-            <a href="projects/wiki.html" class="portfolio__item">
+            <a href="projects/wiki.html" class="portfolio__item" data-reveal="zoom-out" data-reveal-delay="2">
               <img src="/static/img/projects/wiki.png" alt="" class="portfolio__img" />
               <span class="portfolio__text">Wiki</span>
             </a>
-            <a href="projects/weekly-planner.html" class="portfolio__item">
+            <a href="projects/weekly-planner.html" class="portfolio__item" data-reveal="drop" data-reveal-delay="3">
               <img src="/static/img/projects/extension.png" alt="" class="portfolio__img" />
               <span class="portfolio__text">Weekly Planner</span>
             </a>
-            <a href="projects/fractals.html" class="portfolio__item">
+            <a href="projects/fractals.html" class="portfolio__item" data-reveal="flip-left" data-reveal-delay="4">
               <img src="/static/img/projects/fractals-main.png" alt="" class="portfolio__img portfolio__item-mobile" />
               <span class="portfolio__text">Fractals</span>
             </a>
-            <div class="portfolio__item">
+            <div class="portfolio__item" data-reveal="spin-in" data-reveal-delay="5">
               <p>Planned project:</p>
               <p>Sudoku solver</p>
             </div>
           </div>
-          <p>More experiments and production launches are in progress.</p>
+          <p data-reveal="fade">More on the way. Always.</p>
         </section>
         <section class="resume" id="resume-new">
-          <h2 class="section__title section__title--resume">My resume</h2>
-          <div class="embed-resume">
+          <h2 class="section__title section__title--resume" data-reveal="slide-down">My resume</h2>
+          <div class="embed-resume" data-reveal="pop" data-reveal-delay="1">
             <a href="/static/img/liel_ben_or_resume.pdf" target="_blank">View resume<span style="margin-right: 0.25em"></span><i class="fas fa-external-link-alt"></i></a>
           </div>
         </section>
         <footer class="footer">
-          <a href="mailto:liel4349@gmail.com" class="footer__link"><i class="fa fa-envelope" aria-hidden="true"></i> Contact Me</a>
-          <ul class="social-list">
+          <a href="mailto:liel4349@gmail.com" class="footer__link" data-reveal="slide-up"><i class="fa fa-envelope" aria-hidden="true"></i> Contact Me</a>
+          <ul class="social-list" data-reveal="slide-right" data-reveal-delay="1">
             <li class="social-list__link"><a href="https://github.com/lebnor"><i class="fab fa-github"> github</i></a></li>
             <li class="social-list__link"><a href="https://www.linkedin.com/in/liel-ben-or-145b64189/"><i class="fab fa-linkedin-in"> linked-in</i></a></li>
           </ul>
