@@ -1,13 +1,5 @@
 {
-  "$schema": "https://openapi.vercel.sh/vercel.json",
   "version": 2,
   "framework": null,
-  "outputDirectory": ".",
-  "rewrites": [
-    {
-      "source": "/",
-      "has": [{ "type": "host", "value": "app.lielbenor.com" }],
-      "destination": "/app.html"
-    }
-  ]
+  "outputDirectory": "."
 }
