@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="A small selection of digital products designed and built by Liel Ben-Or." />
+    <title>Selected Work — Liel Ben-Or</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Manrope:wght@600;700&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #0c0e0f;
+        --surface: #151819;
+        --line: #282d2f;
+        --text: #f2f2ed;
+        --muted: #a5abaa;
+        --accent: #b6f36b;
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: "DM Sans", sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      main {
+        width: min(1180px, calc(100% - 40px));
+        margin: 0 auto;
+        padding: 72px 0 88px;
+      }
+
+      header {
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        gap: 32px;
+        margin-bottom: 42px;
+      }
+
+      .eyebrow {
+        margin: 0 0 12px;
+        color: var(--accent);
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: .18em;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        max-width: 680px;
+        margin: 0;
+        font-family: "Manrope", sans-serif;
+        font-size: clamp(40px, 7vw, 76px);
+        line-height: .98;
+        letter-spacing: -.055em;
+      }
+
+      .intro {
+        max-width: 330px;
+        margin: 0;
+        color: var(--muted);
+        font-size: 16px;
+        line-height: 1.6;
+      }
+
+      .projects {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+      }
+
+      article {
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        background: var(--surface);
+      }
+
+      article:first-child { grid-column: 1 / -1; }
+
+      .preview {
+        aspect-ratio: 16 / 10;
+        overflow: hidden;
+        background: #202425;
+      }
+
+      article:first-child .preview { aspect-ratio: 2 / 1; }
+
+      img {
+        width: 100%;
+        height: 100%;
+        display: block;
+        object-fit: cover;
+        object-position: top center;
+        filter: saturate(.88);
+        transition: transform 420ms cubic-bezier(.2,.7,.2,1), filter 240ms ease;
+      }
+
+      article:hover img {
+        transform: scale(1.015);
+        filter: saturate(1);
+      }
+
+      .copy { padding: 22px 24px 26px; }
+
+      h2 {
+        margin: 0 0 7px;
+        font-family: "Manrope", sans-serif;
+        font-size: 20px;
+        letter-spacing: -.025em;
+      }
+
+      article:first-child h2 { font-size: 25px; }
+
+      .copy p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 15px;
+        line-height: 1.55;
+      }
+
+      footer {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        margin-top: 34px;
+        color: #747b7a;
+        font-size: 13px;
+      }
+
+      @media (max-width: 760px) {
+        main { width: min(100% - 24px, 560px); padding: 42px 0 56px; }
+        header { display: block; margin-bottom: 28px; }
+        h1 { font-size: clamp(42px, 15vw, 62px); }
+        .intro { margin-top: 22px; }
+        .projects { grid-template-columns: 1fr; gap: 14px; }
+        article:first-child { grid-column: auto; }
+        article:first-child .preview, .preview { aspect-ratio: 16 / 10; }
+        .copy { padding: 18px 18px 21px; }
+        article:first-child h2 { font-size: 20px; }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        img { transition: none; }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <div>
+          <p class="eyebrow">Liel Ben-Or · Selected work</p>
+          <h1>Products built for the real world.</h1>
+        </div>
+        <p class="intro">A small selection of tools shaped around operational problems, focused workflows and useful outcomes.</p>
+      </header>
+
+      <section class="projects" aria-label="Selected projects">
+        <article>
+          <div class="preview"><img src="/static/img/work/workflow-platform.png" alt="Dark interface for a business workflow platform" /></div>
+          <div class="copy">
+            <h2>Connected Operations</h2>
+            <p>A unified digital layer for turning fragmented business processes into clear, repeatable workflows.</p>
+          </div>
+        </article>
+
+        <article>
+          <div class="preview"><img src="/static/img/work/business-discovery.png" alt="Map-based business discovery interface" /></div>
+          <div class="copy">
+            <h2>Geographic Discovery</h2>
+            <p>A map-first research workspace that transforms a search area into an actionable business dataset.</p>
+          </div>
+        </article>
+
+        <article>
+          <div class="preview"><img src="/static/img/work/data-workbench.png" alt="Structured data transformation workbench" /></div>
+          <div class="copy">
+            <h2>Structured Data Workbench</h2>
+            <p>A focused browser tool for inspecting, comparing and reshaping complex data contracts.</p>
+          </div>
+        </article>
+
+        <article>
+          <div class="preview"><img src="/static/img/work/vehicle-viewer.png" alt="Interactive 360-degree vehicle viewer" /></div>
+          <div class="copy">
+            <h2>Interactive Vehicle Studio</h2>
+            <p>A responsive product viewer that gives customers a fluid, detailed look from every angle.</p>
+          </div>
+        </article>
+
+        <article>
+          <div class="preview"><img src="/static/img/work/visualization-studio.png" alt="Vehicle image generation workspace" /></div>
+          <div class="copy">
+            <h2>Visualization Studio</h2>
+            <p>An assisted image workflow for exploring vehicle finishes consistently across multiple viewpoints.</p>
+          </div>
+        </article>
+      </section>
+
+      <footer><span>Selected work · 2026</span><span>Built by Liel Ben-Or</span></footer>
+    </main>
+  </body>
+</html>
