@@ -8,6 +8,8 @@ venv/
 *.jpg
 !static/**/*.png
 !static/**/*.jpg
+!app-site/static/**/*.png
+!app-site/static/**/*.jpg
 
 # Python cache
 __pycache__/
