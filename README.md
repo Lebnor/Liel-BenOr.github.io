@@ -68,3 +68,28 @@ layouts. When changing only `app-site/`, also confirm that the main landing page
 still renders unchanged. The main-site experience must not gain routing,
 runtime, or latency dependencies on the showcase.
 
+
+## Programmable world development branch
+
+The main landing page is a static, scroll-directed Three.js environment. Serve
+this checkout directly; no build step or Node server is required:
+
+```bash
+python3 -m http.server 4187 --bind 127.0.0.1
+```
+
+Open `http://localhost:4187`. The root `index.html` and Flask's
+`templates/index.html` are intentionally identical. Keep them synchronized.
+The independent `app-site/` deployment is unchanged; its existing screenshots
+are also used by this landing page.
+
+Narrative and project dialogs live in `static/js/site.js`. Camera choreography,
+architecture, illumination, project installations, and rendering lifecycle live
+under `static/js/world/`. Three.js is vendored locally with its MIT license and
+reproduction instructions in `static/vendor/README.txt`. Texture/font credits
+and licenses are in `static/world/`.
+
+The environment caps rendering resolution, batches repeated geometry, limits
+frame rate, settles when idle, and stops rendering in hidden tabs. Reduced
+motion uses fixed chapter compositions. The motion button pauses ambient
+animation. If WebGL is unavailable, the story and project details remain usable.

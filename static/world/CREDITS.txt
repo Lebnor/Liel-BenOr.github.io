@@ -1,0 +1,9 @@
+Concrete Floor by eye-candy.xyz / Poly Haven, CC0
+https://polyhaven.com/a/concrete_floor
+Resized to 768 px and encoded as WebP.
+
+Space Grotesk and IBM Plex Mono: Google Fonts, SIL Open Font License.
+https://fonts.google.com/specimen/Space+Grotesk
+https://fonts.google.com/specimen/IBM+Plex+Mono
+
+All environment geometry and scene composition authored for this portfolio. No Joseph Santamaria assets are used.
