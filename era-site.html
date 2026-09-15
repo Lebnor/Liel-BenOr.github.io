@@ -1,0 +1,775 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Liel Ben-Or — 2022 → 2026</title>
+<link rel="icon" href="data:,">
+<style>
+  :root { --ink: #08080a; }
+  * { box-sizing: border-box; }
+  html { background: var(--ink); }
+  body { margin: 0; background: var(--ink); overscroll-behavior-y: none; }
+
+  #gl { position: fixed; inset: 0; width: 100vw; height: 100vh; display: block; z-index: 0; }
+  #scroll-root { position: relative; height: 900vh; pointer-events: none; }
+
+  .hud {
+    position: fixed; z-index: 2; pointer-events: none;
+    font: 500 11px/1 ui-monospace, "SF Mono", Menlo, monospace;
+    letter-spacing: .14em; text-transform: uppercase;
+    mix-blend-mode: difference; color: #fff;
+  }
+  .hud--tl { top: 22px; left: 24px; }
+  .hud--tr { top: 22px; right: 24px; font-variant-numeric: tabular-nums; }
+  .hud--bl { bottom: 22px; left: 24px; }
+
+  .chapters { display: flex; gap: 14px; }
+  .chapter { opacity: .24; transition: opacity .35s ease; }
+  .chapter.is-on { opacity: 1; }
+
+  .hint { animation: bob 2.4s ease-in-out infinite; transition: opacity .4s ease; }
+  @keyframes bob { 0%,100% { transform: translateY(0) } 50% { transform: translateY(4px) } }
+
+  .loading {
+    position: fixed; inset: 0; z-index: 3; display: grid; place-items: center;
+    background: var(--ink); color: #6b6b78;
+    font: 500 11px/1 ui-monospace, monospace; letter-spacing: .2em; text-transform: uppercase;
+    transition: opacity .6s ease;
+  }
+  .loading.done { opacity: 0; pointer-events: none; }
+
+  @media (prefers-reduced-motion: reduce) { .hint { animation: none; } }
+</style>
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
+  "troika-three-text": "https://esm.sh/troika-three-text@0.52.4?external=three"
+} }
+</script>
+</head>
+<body>
+
+<canvas id="gl"></canvas>
+<div id="scroll-root"></div>
+
+<div class="hud hud--tl"><div class="chapters" id="chapters"></div></div>
+<div class="hud hud--tr"><span id="readout">0.000</span></div>
+<div class="hud hud--bl hint" id="hint">scroll ↓</div>
+<div class="loading" id="loading">compiling shaders</div>
+
+<script type="module">
+import * as THREE from 'three';
+import { Text, preloadFont } from 'troika-three-text';
+
+const PORTRAIT_SRC = '/static/img/me.png';
+const PROJECTS = [
+  { src: '/static/img/projects/popsi-colada.png',              title: 'Popsi Colada',   meta: 'DJANGO · REST · 2021' },
+  { src: '/static/img/projects/network.png',                   title: 'Network',        meta: 'PRODUCT STATE · 2021' },
+  { src: '/static/img/projects/angular-file-generator-main.png', title: 'File Generator', meta: 'ANGULAR · AWS · 2022' },
+  { src: '/static/img/projects/fractals-main.png',             title: 'Fractals',       meta: 'RECURSION · 2022' },
+];
+
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const SMALL = Math.min(innerWidth, innerHeight) < 620;
+const DPR = Math.min(window.devicePixelRatio || 1, SMALL ? 1.5 : 2);
+const QUALITY = SMALL ? 0.55 : 1;
+const SAMPLES = SMALL ? 5 : 8;
+
+const WARM = 0xfff1e4, ACCENT = 0xff6a3d, DIM = 0x6e6a66;
+const DWELL = 0.45;                    // share of each segment spent on the scene itself
+
+/* ============================================================================
+   1. THE 2022 PAGE, DRAWN TO A CANVAS
+   ========================================================================== */
+const PAGE_W = 1600, PAGE_H = 900;
+
+function drawArchivePage(portrait) {
+  const c = document.createElement('canvas');
+  c.width = PAGE_W; c.height = PAGE_H;
+  const x = c.getContext('2d', { willReadFrequently: true });
+  const BLUE = '#2196f3';
+
+  x.fillStyle = '#ffffff'; x.fillRect(0, 0, PAGE_W, PAGE_H);
+
+  x.fillStyle = BLUE;
+  x.beginPath(); x.arc(112, 84, 26, 0, Math.PI * 2); x.fill();
+  x.fillStyle = '#fff'; x.font = '700 17px Arial'; x.textAlign = 'center';
+  x.fillText('LB', 112, 90);
+  x.textAlign = 'left'; x.fillStyle = '#2d2d2d'; x.font = '700 15px Arial';
+  let nx = 980;
+  for (const item of ['HOME', 'MY SKILLS', 'ABOUT ME', 'MY PROJECTS']) {
+    x.fillText(item, nx, 90); nx += x.measureText(item).width + 46;
+  }
+
+  x.fillStyle = '#2d2d2d';
+  x.font = '400 78px Arial';  x.fillText('Hi, I am', 112, 360);
+  x.font = '700 150px Arial'; x.fillText('Liel', 112, 490);
+                              x.fillText('Ben-Or', 112, 620);
+  x.fillStyle = BLUE; x.fillRect(112, 664, 372, 56);
+  x.fillStyle = '#fff'; x.font = '700 26px Arial';
+  x.fillText('full-stack developer', 132, 702);
+
+  const pd = 360, px = 1080, py = 250;
+  x.fillStyle = BLUE; x.fillRect(px + 66, py + 44, pd, pd);
+  x.save();
+  x.beginPath(); x.arc(px + pd / 2, py + pd / 2, pd / 2, 0, Math.PI * 2); x.clip();
+  x.filter = 'grayscale(1) contrast(1.05)';
+  x.drawImage(portrait, px, py, pd, pd);
+  x.restore(); x.filter = 'none';
+
+  x.strokeStyle = '#d8d8d8'; x.lineWidth = 2;
+  x.beginPath(); x.moveTo(112, 800); x.lineTo(PAGE_W - 112, 800); x.stroke();
+  x.fillStyle = '#6a6a6a'; x.font = '400 21px Arial';
+  x.fillText('Student and self-taught developer', 112, 840);
+  x.textAlign = 'right'; x.fillText('Nice to meet you!', PAGE_W - 112, 840);
+
+  const pcv = document.createElement('canvas');
+  pcv.width = pcv.height = pd;
+  const pcx = pcv.getContext('2d', { willReadFrequently: true });
+  pcx.drawImage(portrait, 0, 0, pd, pd);
+
+  return {
+    canvas: c, ctx: x,
+    portraitCircle: { cx: px + pd / 2, cy: py + pd / 2, r: pd / 2 },
+    portraitData: pcx.getImageData(0, 0, pd, pd).data,
+    portraitSize: pd,
+  };
+}
+
+/* ============================================================================
+   2. GLSL
+   ========================================================================== */
+const NOISE = `
+  float hash(vec2 p){ return fract(sin(dot(p, vec2(12.9898,78.233))) * 43758.5453123); }
+  float hash3(vec3 p){ return fract(sin(dot(p, vec3(12.9898,78.233,37.719))) * 43758.5453123); }
+  float noise2(vec2 p){
+    vec2 i = floor(p), f = fract(p);
+    float a = hash(i), b = hash(i+vec2(1,0)), c = hash(i+vec2(0,1)), d = hash(i+vec2(1,1));
+    vec2 u = f*f*(3.0-2.0*f);
+    return mix(a,b,u.x) + (c-a)*u.y*(1.0-u.x) + (d-b)*u.x*u.y;
+  }
+  float noise3(vec3 p){
+    vec3 i = floor(p), f = fract(p);
+    vec3 u = f*f*(3.0-2.0*f);
+    float n000=hash3(i), n100=hash3(i+vec3(1,0,0)), n010=hash3(i+vec3(0,1,0)), n110=hash3(i+vec3(1,1,0));
+    float n001=hash3(i+vec3(0,0,1)), n101=hash3(i+vec3(1,0,1)), n011=hash3(i+vec3(0,1,1)), n111=hash3(i+vec3(1,1,1));
+    return mix(mix(mix(n000,n100,u.x), mix(n010,n110,u.x), u.y),
+               mix(mix(n001,n101,u.x), mix(n011,n111,u.x), u.y), u.z);
+  }
+`;
+
+const POINTS_VERT = `
+  uniform float uTime, uProgress, uSize, uDpr;
+  uniform vec3  uMouse;
+  attribute vec3  aColor;
+  attribute vec3  aTarget;
+  attribute float aRand;
+  attribute float aKeep;
+  attribute float aWeight;
+  varying vec3  vColor;
+  varying float vAlpha;
+  ${NOISE}
+
+  void main() {
+    float p = uProgress;
+    float burst  = exp(-pow((p - 0.40) / 0.17, 2.0));
+    float settle = smoothstep(0.24, 0.86, p);
+
+    vec3 pos = mix(position, aTarget, settle);
+
+    vec3 seed = position * 0.5 + uTime * 0.05;
+    vec3 dir = normalize(vec3(
+      noise3(seed) - 0.5,
+      noise3(seed.yzx + 11.3) - 0.5,
+      noise3(seed.zxy + 27.1) - 0.5
+    ) + 1e-5);
+    dir = normalize(mix(dir, normalize(position + vec3(0.0, 0.0, 6.0)), 0.45));
+
+    float scatter = mix(2.4, 0.85, aKeep);
+    pos += dir * burst * scatter * (0.9 + aRand * 2.4);
+    pos += dir * (1.0 - aKeep) * settle * (5.0 + aRand * 9.0);
+
+    vec3 toM = pos - uMouse;
+    pos.xy += normalize(toM.xy + 1e-5) * smoothstep(10.0, 0.0, length(toM.xy)) * 2.6;
+    pos.z += sin(uTime * 0.7 + aRand * 6.28) * 0.25 * settle;
+
+    vec4 mv = modelViewMatrix * vec4(pos, 1.0);
+    gl_Position = projectionMatrix * mv;
+    gl_PointSize = uSize * uDpr * (0.6 + aRand * 0.8) * (34.0 / -mv.z);
+
+    vec3 warm = mix(vec3(1.0, 0.93, 0.84), vec3(1.0, 0.46, 0.20), aRand * 0.6);
+    vColor = mix(pow(aColor, vec3(2.2)), pow(warm, vec3(2.2)) * (0.12 + aWeight * 1.75), settle * 0.92);
+    vAlpha = mix(1.0, aKeep * (0.10 + aWeight * 1.25), settle)
+           * (0.30 + burst * 0.45 + settle * 0.75);
+  }
+`;
+
+const POINTS_FRAG = `
+  precision highp float;
+  varying vec3 vColor; varying float vAlpha;
+  void main() {
+    vec2 uv = gl_PointCoord - 0.5;
+    float d = dot(uv, uv);
+    if (d > 0.25) discard;
+    gl_FragColor = vec4(vColor, smoothstep(0.25, 0.01, d) * vAlpha);
+  }
+`;
+
+const COMP_VERT = `
+  varying vec2 vUv;
+  void main(){ vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }
+`;
+
+/* A noise field decides which pixels have already flipped from the outgoing scene
+   to the incoming one. Every distortion lives in the narrow band at that moving
+   boundary, never across the whole frame. uDir alternates the sweep direction so
+   consecutive chapters do not erode identically. */
+const COMP_FRAG = `
+  precision highp float;
+  #define SAMPLES ${SAMPLES}
+  uniform sampler2D tSceneA, tSceneB;
+  uniform float uProgress, uTime, uDir, uBrightA;
+  uniform vec2  uMouseUv, uMouseVel;
+  varying vec2  vUv;
+  ${NOISE}
+
+  void main() {
+    float p = uProgress;
+
+    float m = noise2(vUv * vec2(3.2, 2.1) + vec2(uTime * 0.012, 0.0)) * 0.62
+            + noise2(vUv * vec2(9.0, 6.2) - vec2(uTime * 0.02, 0.0)) * 0.38;
+    float axis = uDir > 0.0 ? (1.0 - vUv.y) : vUv.y;
+    m = m * 0.34 + axis * 0.66;
+
+    float th    = p * 1.34 - 0.17;
+    float keepA = smoothstep(th - 0.085, th + 0.085, m);
+    float band  = 1.0 - abs(keepA - 0.5) * 2.0;
+
+    bool atFront    = band > 0.02;
+    bool mouseMoving = length(uMouseVel) > 0.0001;
+
+    vec2 uv = vUv, blurVec = vec2(0.0), split = vec2(0.0);
+    float mask = 0.0;
+
+    if (mouseMoving) {
+      vec2 trail = uMouseUv - uMouseVel * 4.0;
+      mask = smoothstep(0.24, 0.0, distance(vUv, trail));
+      uv      -= uMouseVel * mask * 1.3;
+      blurVec  = uMouseVel * mask * 6.0;
+      split   += uMouseVel * mask * 3.4;
+    }
+
+    if (atFront) {
+      float n = smoothstep(0.32, 0.72,
+          noise2(vec2(vUv.x *  40.0, uTime * 0.2)) * 0.4
+        + noise2(vec2(vUv.x * 150.0, uTime * 0.4)) * 0.4
+        + noise2(vec2(vUv.x * 400.0, uTime * 0.6)) * 0.2);
+      float f = band * n;
+      uv.y = (uv.y - 0.5) * exp(-f * 1.15) + 0.5 - f * 0.045 * uDir;
+      uv.x += sin(vUv.y * 70.0 + uTime * 3.0) * f * 0.010;
+      split += vec2(f * 0.042, f * 0.011);
+      blurVec += vec2(0.0, f * 0.011);
+    }
+
+    vec3 A = vec3(0.0), B = vec3(0.0);
+    if (atFront || (mouseMoving && mask > 0.001)) {
+      for (int i = 0; i < SAMPLES; i++) {
+        float o = (float(i) / float(SAMPLES - 1)) - 0.5;
+        vec2 s = uv + blurVec * o;
+        vec2 r = clamp(s + split, 0.0, 1.0);
+        vec2 g = clamp(s,         0.0, 1.0);
+        vec2 b = clamp(s - split, 0.0, 1.0);
+        A += vec3(texture2D(tSceneA, r).r, texture2D(tSceneA, g).g, texture2D(tSceneA, b).b);
+        if (p > 0.0) B += vec3(texture2D(tSceneB, r).r, texture2D(tSceneB, g).g, texture2D(tSceneB, b).b);
+      }
+      A /= float(SAMPLES);
+      if (p > 0.0) B /= float(SAMPLES);
+    } else {
+      A = texture2D(tSceneA, uv).rgb;
+      if (p > 0.0) B = texture2D(tSceneB, uv).rgb;
+    }
+
+    // a bright outgoing scene would bloom when smeared, so burn it down at the front
+    A *= (1.0 - 0.62 * band * uBrightA) * (1.0 - 0.45 * smoothstep(0.35, 0.95, p) * uBrightA);
+
+    vec3 col = mix(B, A, keepA);
+    col += vec3(1.0, 0.42, 0.16) * smoothstep(0.72, 1.0, band) * 0.30;
+    col += (hash(vUv + uTime) - 0.5) * (0.012 + band * 0.055);
+
+    gl_FragColor = vec4(col, 1.0);
+  }
+`;
+
+/* ============================================================================
+   3. RENDERER
+   ========================================================================== */
+const canvas = document.getElementById('gl');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, powerPreference: 'high-performance' });
+renderer.setPixelRatio(DPR);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+const rtOpts = { type: THREE.UnsignedByteType, colorSpace: THREE.SRGBColorSpace };
+const rtA = new THREE.WebGLRenderTarget(1, 1, rtOpts);
+const rtB = new THREE.WebGLRenderTarget(1, 1, rtOpts);
+
+const quadScene = new THREE.Scene();
+const quadCam = new THREE.Camera();
+const compMat = new THREE.ShaderMaterial({
+  vertexShader: COMP_VERT, fragmentShader: COMP_FRAG, depthTest: false, depthWrite: false,
+  uniforms: {
+    tSceneA: { value: rtA.texture }, tSceneB: { value: rtB.texture },
+    uProgress: { value: 0 }, uTime: { value: 0 }, uDir: { value: 1 }, uBrightA: { value: 1 },
+    uMouseUv: { value: new THREE.Vector2(0.5, 0.5) },
+    uMouseVel: { value: new THREE.Vector2(0, 0) },
+  },
+});
+quadScene.add(new THREE.Mesh(new THREE.PlaneGeometry(2, 2), compMat));
+
+/* ============================================================================
+   4. SHARED SCENE PIECES
+   ========================================================================== */
+function makeText(txt, o = {}) {
+  const t = new Text();
+  t.text = txt;
+  t.fontSize = o.size ?? 2;
+  t.color = o.color ?? WARM;
+  t.anchorX = o.anchorX ?? 'center';
+  t.anchorY = o.anchorY ?? 'middle';
+  if (o.maxWidth) t.maxWidth = o.maxWidth;
+  if (o.letterSpacing) t.letterSpacing = o.letterSpacing;
+  if (o.lineHeight) t.lineHeight = o.lineHeight;
+  t.position.set(o.x ?? 0, o.y ?? 0, o.z ?? 0);
+  t.material.toneMapped = false;
+  t.material.depthWrite = false;
+  t.sync();
+  return t;
+}
+
+/** A perspective chapter: dark ground, its own camera, content in a group that
+    scales down on narrow viewports instead of the camera retreating. */
+function makeChapter(name, halfY, lookAtY = 0, halfX = 24) {
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color('#08080a');
+  const content = new THREE.Group();
+  scene.add(content);
+  const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 400);
+  let baseZ = 46;
+
+  return {
+    name, scene, camera, content, bright: 0,
+    halfY, halfX, lookAtY,
+    layout: null,                       // optional per-aspect rearrangement
+    onResize(w, h) {
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+      if (this.layout) this.layout(camera.aspect);
+
+      // Frame vertically by pulling the camera back, then fit the width by scaling
+      // the content — retreating far enough to fit a phone's width would leave the
+      // chapter a distant speck in a sea of empty vertical space.
+      const tanHalf = Math.tan((camera.fov * Math.PI / 180) / 2);
+      baseZ = Math.max(42, this.halfY / tanHalf);
+      const visibleHalfW = baseZ * tanHalf * camera.aspect;
+      content.scale.setScalar(Math.min(1, visibleHalfW / this.halfX));
+      lookAtY = this.lookAtY;
+    },
+    drift(t) {
+      camera.position.set(Math.sin(t * 0.13) * 1.6, lookAtY + Math.cos(t * 0.10) * 1.1, baseZ);
+      camera.lookAt(0, lookAtY, 0);
+    },
+  };
+}
+
+/* ============================================================================
+   5. THE CHAPTERS
+   ========================================================================== */
+const chapters = [];
+let pointsMat = null;
+
+function buildArchive(portraitImg) {
+  const { canvas: pageCanvas, ctx, portraitCircle, portraitData, portraitSize } = drawArchivePage(portraitImg);
+
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color('#ffffff');
+  const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+  const tex = new THREE.CanvasTexture(pageCanvas);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.minFilter = THREE.LinearFilter;
+  const plane = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), new THREE.MeshBasicMaterial({ map: tex }));
+  plane.material.toneMapped = false;
+  scene.add(plane);
+
+  chapters.push({
+    name: '2022', scene, camera, bright: 1,
+    onResize(w, h) { plane.scale.set(1, (w / h) / (PAGE_W / PAGE_H), 1); },
+    drift() {},
+  });
+
+  return { ctx, portraitCircle, portraitData, portraitSize };
+}
+
+function buildPortrait(src) {
+  const { ctx, portraitCircle, portraitData, portraitSize } = src;
+  const ch = makeChapter('2026', 24, -6, 18);
+
+  const img = ctx.getImageData(0, 0, PAGE_W, PAGE_H).data;
+  const WORLD_W = 46, WORLD_H = WORLD_W * PAGE_H / PAGE_W;
+  const { cx, cy, r: pr } = portraitCircle;
+
+  const CAP = 260000;
+  const pos = new Float32Array(CAP * 3), tgt = new Float32Array(CAP * 3), col = new Float32Array(CAP * 3);
+  const rnd = new Float32Array(CAP), keep = new Float32Array(CAP), wgt = new Float32Array(CAP);
+  let k = 0;
+
+  const worldX = (sx) => (sx / PAGE_W - 0.5) * WORLD_W;
+  const worldY = (sy) => -(sy / PAGE_H - 0.5) * WORLD_H;
+  const PS = portraitSize, px0 = cx - pr, py0 = cy - pr;
+
+  const wallLum = (() => {
+    const ring = [];
+    for (let a = 0; a < 360; a += 2) {
+      const lx = Math.floor(PS / 2 + Math.cos(a * Math.PI / 180) * (PS / 2) * 0.94);
+      const ly = Math.floor(PS / 2 + Math.sin(a * Math.PI / 180) * (PS / 2) * 0.94);
+      const o = (ly * PS + lx) * 4;
+      ring.push((0.299 * portraitData[o] + 0.587 * portraitData[o + 1] + 0.114 * portraitData[o + 2]) / 255);
+    }
+    ring.sort((a, b) => a - b);
+    return ring[Math.floor(ring.length * 0.5)];
+  })();
+
+  // grey wall has no chroma, skin does; hair is simply dark. Brightness alone cannot
+  // separate them because the 2022 render desaturates the photo.
+  function sampleSubject(sx, sy) {
+    const lx = Math.floor((sx - px0) / (2 * pr) * PS);
+    const ly = Math.floor((sy - py0) / (2 * pr) * PS);
+    if (lx < 0 || ly < 0 || lx >= PS || ly >= PS) return null;
+    const o = (ly * PS + lx) * 4;
+    const r = portraitData[o] / 255, g = portraitData[o + 1] / 255, b = portraitData[o + 2] / 255;
+    const lum = 0.299 * r + 0.587 * g + 0.114 * b;
+    const chroma = Math.max(r, g, b) - Math.min(r, g, b);
+    return (chroma > 0.055 || lum < wallLum - 0.10) ? { r, g, b, lum } : null;
+  }
+
+  function write(sx, sy, r, g, b, target, isKeep, weight) {
+    const i3 = k * 3;
+    pos[i3] = worldX(sx); pos[i3 + 1] = worldY(sy); pos[i3 + 2] = 0;
+    col[i3] = r; col[i3 + 1] = g; col[i3 + 2] = b;
+    tgt[i3] = target[0]; tgt[i3 + 1] = target[1]; tgt[i3 + 2] = target[2];
+    keep[k] = isKeep; wgt[k] = weight; rnd[k] = Math.random();
+    k++;
+  }
+
+  const COLS = Math.round(620 * QUALITY), ROWS = Math.round(COLS * PAGE_H / PAGE_W);
+  for (let j = 0; j < ROWS; j++) {
+    for (let i = 0; i < COLS; i++) {
+      const sx = (i + 0.5) * PAGE_W / COLS, sy = (j + 0.5) * PAGE_H / ROWS;
+      if (Math.hypot(sx - cx, sy - cy) < pr) continue;
+      const o = (Math.floor(sy) * PAGE_W + Math.floor(sx)) * 4;
+      const r = img[o] / 255, g = img[o + 1] / 255, b = img[o + 2] / 255;
+      const lum = 0.299 * r + 0.587 * g + 0.114 * b;
+      if (lum > 0.92) continue;
+      write(sx, sy, r, g, b, [worldX(sx) * 2.1, worldY(sy) * 2.1, -26.0], 0, 1 - lum);
+    }
+  }
+
+  const PN = Math.round(240 * Math.max(0.8, QUALITY));
+  const samples = [];
+  for (let j = 0; j < PN; j++) {
+    for (let i = 0; i < PN; i++) {
+      const sx = px0 + (i + 0.5) * (2 * pr) / PN;
+      const sy = py0 + (j + 0.5) * (2 * pr) / PN;
+      if (Math.hypot(sx - cx, sy - cy) >= pr) continue;
+      const s = sampleSubject(sx, sy);
+      if (s) samples.push({ sx, sy, ...s });
+    }
+  }
+  const sorted = samples.map(s => s.lum).sort((a, b) => a - b);
+  const lo = sorted[Math.floor(sorted.length * 0.04)], hi = sorted[Math.floor(sorted.length * 0.97)];
+  const tone = (l) => Math.pow(Math.min(1, Math.max(0, (l - lo) / (hi - lo))), 1.55);
+
+  for (const s of samples) {
+    const nx = (s.sx - cx) / pr, ny = (s.sy - cy) / pr, t = tone(s.lum);
+    write(s.sx, s.sy, s.r, s.g, s.b, [nx * 17.0, -ny * 17.0, (t - 0.42) * 11.0], 1, 0.05 + 0.95 * t);
+  }
+
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.BufferAttribute(pos.slice(0, k * 3), 3));
+  geo.setAttribute('aTarget',  new THREE.BufferAttribute(tgt.slice(0, k * 3), 3));
+  geo.setAttribute('aColor',   new THREE.BufferAttribute(col.slice(0, k * 3), 3));
+  geo.setAttribute('aRand',    new THREE.BufferAttribute(rnd.slice(0, k), 1));
+  geo.setAttribute('aKeep',    new THREE.BufferAttribute(keep.slice(0, k), 1));
+  geo.setAttribute('aWeight',  new THREE.BufferAttribute(wgt.slice(0, k), 1));
+
+  pointsMat = new THREE.ShaderMaterial({
+    vertexShader: POINTS_VERT, fragmentShader: POINTS_FRAG,
+    transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+    uniforms: {
+      uTime: { value: 0 }, uProgress: { value: 0 }, uSize: { value: 2.6 },
+      uDpr: { value: DPR }, uMouse: { value: new THREE.Vector3(999, 999, 0) },
+    },
+  });
+  ch.content.add(new THREE.Points(geo, pointsMat));
+  ch.content.add(makeText('Preserved, not inflated.', { size: 2.7, y: -23 }));
+  ch.content.add(makeText('LIEL BEN-OR', { size: 0.92, y: -27.4, color: ACCENT, letterSpacing: 0.34 }));
+  chapters.push(ch);
+  console.info(`[site] ${k.toLocaleString()} particles sampled from the 2022 page`);
+}
+
+function buildWork(textures) {
+  const ch = makeChapter('WORK', 24, 0, 34);
+
+  // scattered across the width on a desktop; a single readable column on a phone
+  const WIDE = [
+    { x: -23, y: 10, z: 2 }, { x: 23, y: 10, z: -7 },
+    { x: -23, y: -11, z: -3 }, { x: 23, y: -11, z: -9 },
+  ];
+  const TALL = [
+    { x: 0, y: 32, z: 0 }, { x: 0, y: 11, z: 0 },
+    { x: 0, y: -10, z: 0 }, { x: 0, y: -32, z: 0 },
+  ];
+
+  const heading = makeText('Things I built.', { size: 2.4, y: 19.5 });
+  ch.content.add(heading);
+
+  const cards = PROJECTS.map((proj) => {
+    const tex = textures[proj.src];
+    const group = new THREE.Group();
+    const geoFor = (w) => new THREE.PlaneGeometry(w, w / (tex.image.width / tex.image.height));
+
+    const card = new THREE.Mesh(geoFor(1), new THREE.MeshBasicMaterial({ map: tex, toneMapped: false }));
+    const frame = new THREE.LineSegments(
+      new THREE.EdgesGeometry(geoFor(1)),
+      new THREE.LineBasicMaterial({ color: ACCENT, transparent: true, opacity: 0.35 })
+    );
+    const title = makeText(proj.title, { size: 1.15, anchorX: 'left' });
+    const meta = makeText(proj.meta, { size: 0.6, color: DIM, letterSpacing: 0.22, anchorX: 'left' });
+
+    group.add(card, frame, title, meta);
+    ch.content.add(group);
+    return { group, card, frame, title, meta, tex, geoFor };
+  });
+
+  // Fractals is a 495x905 phone capture next to three ~2:1 desktop shots, so a
+  // fixed card width makes it tower over the others. Fit each into a shared box.
+  const fitBox = (imgAspect, maxW, maxH) => {
+    let w = maxW, h = maxW / imgAspect;
+    if (h > maxH) { h = maxH; w = maxH * imgAspect; }
+    return { w, h };
+  };
+
+  let laidOut = null;
+  ch.layout = (aspect) => {
+    const wide = aspect > 0.9;
+    if (laidOut === wide) return;
+    laidOut = wide;
+
+    const slots = wide ? WIDE : TALL;
+    const maxW = wide ? 20 : 18, maxH = wide ? 12.5 : 20;
+
+    cards.forEach((c, i) => {
+      const { w, h } = fitBox(c.tex.image.width / c.tex.image.height, maxW, maxH);
+      c.card.geometry.dispose(); c.card.geometry = new THREE.PlaneGeometry(w, h);
+      c.frame.geometry.dispose(); c.frame.geometry = new THREE.EdgesGeometry(new THREE.PlaneGeometry(w, h));
+      c.group.position.set(slots[i].x, slots[i].y, slots[i].z);
+      c.title.position.set(-w / 2, -h / 2 - 1.5, 0);
+      c.meta.position.set(-w / 2, -h / 2 - 3.0, 0);
+    });
+
+    heading.position.y = wide ? 19.5 : 46;
+    ch.halfY = wide ? 22 : 52;
+    ch.halfX = wide ? 34 : 10.5;
+  };
+
+  chapters.push(ch);
+}
+
+function buildDiff() {
+  const ch = makeChapter('DIFF', 22, 0, 28);
+  const ROWS = [
+    ['BUILDING', 'Make it work.', 'Make the system understandable, operable, and worth maintaining.'],
+    ['LEARNING', 'Collect technologies.', 'Choose fewer tools, for clearer reasons.'],
+    ['CRAFT', 'Add another effect.', 'Make every interaction explain itself.'],
+  ];
+
+  ch.content.add(makeText('Same person.\nDifferent definition of done.', {
+    size: 2.2, y: 16, lineHeight: 1.25,
+  }));
+
+  ROWS.forEach(([label, before, after], i) => {
+    const y = 6 - i * 8.5;
+    ch.content.add(makeText(label, {
+      size: 0.62, x: -27, y, anchorX: 'left', color: ACCENT, letterSpacing: 0.3,
+    }));
+    ch.content.add(makeText('−  ' + before, {
+      size: 1.05, x: -16, y: y + 1.5, anchorX: 'left', color: DIM,
+    }));
+    ch.content.add(makeText('+  ' + after, {
+      size: 1.25, x: -16, y: y - 1.4, anchorX: 'left', maxWidth: 34, lineHeight: 1.3,
+    }));
+  });
+
+  chapters.push(ch);
+}
+
+function buildContact() {
+  const ch = makeChapter('NEXT', 18, 0, 13);
+  ch.content.add(makeText('Let’s build something.', { size: 3.1, y: 6, maxWidth: 26, lineHeight: 1.2 }));
+  ch.content.add(makeText('liel4349@gmail.com', { size: 1.9, y: -2, color: ACCENT }));
+  ch.content.add(makeText('GITHUB    LINKEDIN    RESUME', {
+    size: 0.8, y: -8, color: DIM, letterSpacing: 0.32,
+  }));
+  chapters.push(ch);
+}
+
+/* ============================================================================
+   6. SCROLL -> CHAPTER MACHINE
+   ========================================================================== */
+let targetP = 0, smoothP = 0;
+function readScroll() {
+  const max = document.documentElement.scrollHeight - innerHeight;
+  targetP = max > 0 ? Math.min(1, Math.max(0, scrollY / max)) : 0;
+}
+addEventListener('scroll', readScroll, { passive: true });
+window.__spike = { set(v) { targetP = smoothP = v; } };
+
+const mouseUv = new THREE.Vector2(0.5, 0.5);
+const prevUv = new THREE.Vector2(0.5, 0.5);
+const velUv = new THREE.Vector2(0, 0);
+let pointerSeen = false;
+addEventListener('pointermove', (e) => {
+  pointerSeen = true;
+  mouseUv.set(e.clientX / innerWidth, 1 - e.clientY / innerHeight);
+}, { passive: true });
+
+function resize() {
+  const w = innerWidth, h = innerHeight;
+  renderer.setSize(w, h, false);
+  rtA.setSize(Math.round(w * DPR), Math.round(h * DPR));
+  rtB.setSize(Math.round(w * DPR), Math.round(h * DPR));
+  for (const ch of chapters) ch.onResize(w, h);
+  readScroll();
+}
+addEventListener('resize', resize);
+
+/** Splits global progress into "which pair of chapters, and how far across". */
+function locate(p) {
+  const segs = chapters.length - 1;
+  const raw = Math.min(segs - 1e-6, p * segs);
+  const i = Math.floor(raw);
+  const local = raw - i;
+  return { i, cross: local <= DWELL ? 0 : (local - DWELL) / (1 - DWELL) };
+}
+
+const clock = new THREE.Clock();
+const readout = document.getElementById('readout');
+const hint = document.getElementById('hint');
+const chapterEls = [];
+
+function buildHud() {
+  const wrap = document.getElementById('chapters');
+  chapters.forEach((ch) => {
+    const el = document.createElement('span');
+    el.className = 'chapter';
+    el.textContent = ch.name;
+    wrap.appendChild(el);
+    chapterEls.push(el);
+  });
+}
+
+function frame() {
+  requestAnimationFrame(frame);
+  const t = clock.getElapsedTime();
+
+  smoothP += (targetP - smoothP) * (reduced ? 1 : 0.085);
+  const p = smoothP;
+  const { i, cross } = locate(p);
+  const from = chapters[i], to = chapters[i + 1];
+
+  velUv.x += ((mouseUv.x - prevUv.x) - velUv.x) * 0.05;
+  velUv.y += ((mouseUv.y - prevUv.y) - velUv.y) * 0.05;
+  prevUv.copy(mouseUv);
+
+  if (pointsMat) {
+    pointsMat.uniforms.uTime.value = t;
+    pointsMat.uniforms.uProgress.value = i === 0 ? cross : 1;
+    if (pointerSeen) {
+      pointsMat.uniforms.uMouse.value.set(
+        (mouseUv.x - 0.5) * 46,
+        (mouseUv.y - 0.5) * 46 * (innerHeight / innerWidth), 0
+      );
+    }
+  }
+
+  from.drift(t);
+  renderer.setRenderTarget(rtA);
+  renderer.render(from.scene, from.camera);
+
+  if (cross > 0.001) {                    // the incoming chapter costs nothing until needed
+    to.drift(t);
+    renderer.setRenderTarget(rtB);
+    renderer.render(to.scene, to.camera);
+  }
+
+  renderer.setRenderTarget(null);
+  compMat.uniforms.uProgress.value = cross;
+  compMat.uniforms.uTime.value = t;
+  compMat.uniforms.uDir.value = i % 2 === 0 ? 1 : -1;
+  compMat.uniforms.uBrightA.value = from.bright;
+  compMat.uniforms.uMouseUv.value.copy(mouseUv);
+  compMat.uniforms.uMouseVel.value.copy(velUv);
+  renderer.render(quadScene, quadCam);
+
+  readout.textContent = p.toFixed(3);
+  const active = cross > 0.5 ? i + 1 : i;
+  chapterEls.forEach((el, n) => el.classList.toggle('is-on', n === active));
+  hint.style.opacity = p > 0.02 ? '0' : '1';
+}
+
+/* ============================================================================
+   7. BOOT
+   ========================================================================== */
+function loadImage(src) {
+  return new Promise((res, rej) => new THREE.ImageLoader().load(src, res, undefined, rej));
+}
+
+(async function boot() {
+  const loading = document.getElementById('loading');
+  try {
+    const [portraitImg, ...projImgs] = await Promise.all([
+      loadImage(PORTRAIT_SRC),
+      ...PROJECTS.map(p => loadImage(p.src)),
+    ]);
+
+    const textures = {};
+    PROJECTS.forEach((p, n) => {
+      const tex = new THREE.Texture(projImgs[n]);
+      tex.colorSpace = THREE.SRGBColorSpace;
+      tex.minFilter = THREE.LinearFilter;
+      tex.needsUpdate = true;
+      textures[p.src] = tex;
+    });
+
+    const src = buildArchive(portraitImg);
+    buildPortrait(src);
+    buildWork(textures);
+    buildDiff();
+    buildContact();
+    buildHud();
+
+    await new Promise((res) => {
+      const done = () => res();
+      setTimeout(done, 3000);                 // never block boot on a font CDN
+      preloadFont({ characters: 'Preserved, not inflated.LIEL BEN-ORThings I built.Same person Different definition of done Let’s build something liel4349@gmail.com' }, done);
+    });
+
+    resize();
+    loading.classList.add('done');
+    frame();
+  } catch (err) {
+    loading.textContent = 'failed: ' + (err && err.message ? err.message : err);
+  }
+})();
+</script>
+</body>
+</html>
