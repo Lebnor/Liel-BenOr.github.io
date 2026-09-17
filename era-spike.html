@@ -1,0 +1,645 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Era Spike — uProgress</title>
+<link rel="icon" href="data:,">
+<style>
+  :root { --ink: #08080a; }
+  * { box-sizing: border-box; }
+  html { background: var(--ink); }
+  body { margin: 0; background: var(--ink); overscroll-behavior-y: none; }
+
+  #gl { position: fixed; inset: 0; width: 100vw; height: 100vh; display: block; z-index: 0; }
+  #scroll-root { position: relative; height: 520vh; pointer-events: none; }
+
+  .hud {
+    position: fixed; z-index: 2; pointer-events: none;
+    font: 500 11px/1 ui-monospace, "SF Mono", Menlo, monospace;
+    letter-spacing: .14em; text-transform: uppercase;
+    mix-blend-mode: difference; color: #fff;
+  }
+  .hud--tl { top: 22px; left: 24px; display: flex; gap: 10px; align-items: baseline; }
+  .hud--tr { top: 22px; right: 24px; font-variant-numeric: tabular-nums; }
+  .hud--bl { bottom: 22px; left: 24px; }
+
+  .era { transition: opacity .35s ease; }
+  .era--dim { opacity: .26; }
+
+  .hint { animation: bob 2.4s ease-in-out infinite; transition: opacity .4s ease; }
+  @keyframes bob { 0%,100% { transform: translateY(0) } 50% { transform: translateY(4px) } }
+
+  .loading {
+    position: fixed; inset: 0; z-index: 3; display: grid; place-items: center;
+    background: var(--ink); color: #6b6b78;
+    font: 500 11px/1 ui-monospace, monospace; letter-spacing: .2em; text-transform: uppercase;
+    transition: opacity .6s ease;
+  }
+  .loading.done { opacity: 0; pointer-events: none; }
+
+  @media (prefers-reduced-motion: reduce) { .hint { animation: none; } }
+</style>
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
+  "troika-three-text": "https://esm.sh/troika-three-text@0.52.4?external=three"
+} }
+</script>
+</head>
+<body>
+
+<canvas id="gl"></canvas>
+<div id="scroll-root"></div>
+
+<div class="hud hud--tl">
+  <span class="era" id="era-a">2022</span>
+  <span style="opacity:.35">→</span>
+  <span class="era era--dim" id="era-b">2026</span>
+</div>
+<div class="hud hud--tr"><span id="readout">uProgress 0.000</span></div>
+<div class="hud hud--bl hint" id="hint">scroll ↓</div>
+
+<div class="loading" id="loading">compiling shaders</div>
+
+<script type="module">
+import * as THREE from 'three';
+import { Text, preloadFont } from 'troika-three-text';
+
+const PORTRAIT_SRC = '/static/img/me.png';
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* A phone pays for every particle, every composite sample and every device pixel,
+   so the whole budget scales off one measurement taken at boot. */
+const SMALL = Math.min(innerWidth, innerHeight) < 620;
+const DPR = Math.min(window.devicePixelRatio || 1, SMALL ? 1.5 : 2);
+const QUALITY = SMALL ? 0.55 : 1;
+const SAMPLES = SMALL ? 5 : 8;
+
+/* ============================================================================
+   1. THE 2022 PAGE, DRAWN TO A CANVAS
+   Scene A's only content — flat, bright, static, rendered once.
+   It is also the pixel source Scene B's particle field is sampled from.
+   ========================================================================== */
+const PAGE_W = 1600, PAGE_H = 900;
+
+function drawArchivePage(portrait) {
+  const c = document.createElement('canvas');
+  c.width = PAGE_W; c.height = PAGE_H;
+  const x = c.getContext('2d', { willReadFrequently: true });
+  const BLUE = '#2196f3';
+
+  x.fillStyle = '#ffffff'; x.fillRect(0, 0, PAGE_W, PAGE_H);
+
+  x.fillStyle = BLUE;
+  x.beginPath(); x.arc(112, 84, 26, 0, Math.PI * 2); x.fill();
+  x.fillStyle = '#fff'; x.font = '700 17px Arial'; x.textAlign = 'center';
+  x.fillText('LB', 112, 90);
+  x.textAlign = 'left'; x.fillStyle = '#2d2d2d'; x.font = '700 15px Arial';
+  let nx = 980;
+  for (const item of ['HOME', 'MY SKILLS', 'ABOUT ME', 'MY PROJECTS']) {
+    x.fillText(item, nx, 90); nx += x.measureText(item).width + 46;
+  }
+
+  x.fillStyle = '#2d2d2d';
+  x.font = '400 78px Arial';  x.fillText('Hi, I am', 112, 360);
+  x.font = '700 150px Arial'; x.fillText('Liel', 112, 490);
+                              x.fillText('Ben-Or', 112, 620);
+  x.fillStyle = BLUE; x.fillRect(112, 664, 372, 56);
+  x.fillStyle = '#fff'; x.font = '700 26px Arial';
+  x.fillText('full-stack developer', 132, 702);
+
+  const pd = 360, px = 1080, py = 250;
+  x.fillStyle = BLUE; x.fillRect(px + 66, py + 44, pd, pd);
+  x.save();
+  x.beginPath(); x.arc(px + pd / 2, py + pd / 2, pd / 2, 0, Math.PI * 2); x.clip();
+  x.filter = 'grayscale(1) contrast(1.05)';
+  x.drawImage(portrait, px, py, pd, pd);
+  x.restore(); x.filter = 'none';
+
+  x.strokeStyle = '#d8d8d8'; x.lineWidth = 2;
+  x.beginPath(); x.moveTo(112, 800); x.lineTo(PAGE_W - 112, 800); x.stroke();
+  x.fillStyle = '#6a6a6a'; x.font = '400 21px Arial';
+  x.fillText('Student and self-taught developer', 112, 840);
+  x.textAlign = 'right'; x.fillText('Nice to meet you!', PAGE_W - 112, 840);
+
+  // Scene A shows the portrait desaturated, the way 2022 did. Scene B needs the
+  // original colour: a grey wall has no chroma, skin does, and that separates them.
+  const pcv = document.createElement('canvas');
+  pcv.width = pcv.height = pd;
+  const pcx = pcv.getContext('2d', { willReadFrequently: true });
+  pcx.drawImage(portrait, 0, 0, pd, pd);
+
+  return {
+    canvas: c, ctx: x,
+    portraitCircle: { cx: px + pd / 2, cy: py + pd / 2, r: pd / 2 },
+    portraitData: pcx.getImageData(0, 0, pd, pd).data,
+    portraitSize: pd,
+  };
+}
+
+/* ============================================================================
+   2. GLSL
+   ========================================================================== */
+const NOISE = `
+  float hash(vec2 p){ return fract(sin(dot(p, vec2(12.9898,78.233))) * 43758.5453123); }
+  float hash3(vec3 p){ return fract(sin(dot(p, vec3(12.9898,78.233,37.719))) * 43758.5453123); }
+  float noise2(vec2 p){
+    vec2 i = floor(p), f = fract(p);
+    float a = hash(i), b = hash(i+vec2(1,0)), c = hash(i+vec2(0,1)), d = hash(i+vec2(1,1));
+    vec2 u = f*f*(3.0-2.0*f);
+    return mix(a,b,u.x) + (c-a)*u.y*(1.0-u.x) + (d-b)*u.x*u.y;
+  }
+  float noise3(vec3 p){
+    vec3 i = floor(p), f = fract(p);
+    vec3 u = f*f*(3.0-2.0*f);
+    float n000=hash3(i), n100=hash3(i+vec3(1,0,0)), n010=hash3(i+vec3(0,1,0)), n110=hash3(i+vec3(1,1,0));
+    float n001=hash3(i+vec3(0,0,1)), n101=hash3(i+vec3(1,0,1)), n011=hash3(i+vec3(0,1,1)), n111=hash3(i+vec3(1,1,1));
+    return mix(mix(mix(n000,n100,u.x), mix(n010,n110,u.x), u.y),
+               mix(mix(n001,n101,u.x), mix(n011,n111,u.x), u.y), u.z);
+  }
+`;
+
+const POINTS_VERT = `
+  uniform float uTime, uProgress, uSize, uDpr;
+  uniform vec3  uMouse;
+  attribute vec3  aColor;
+  attribute vec3  aTarget;
+  attribute float aRand;
+  attribute float aKeep;       // 1 = part of him, survives into 2026
+  attribute float aWeight;     // how much this point matters once it is light on dark
+  varying vec3  vColor;
+  varying float vAlpha;
+  ${NOISE}
+
+  void main() {
+    float p = uProgress;
+    // Narrow burst, centred before the midpoint and effectively gone by 0.7, so the
+    // last third of the scroll is a settled portrait instead of floating debris.
+    float burst  = exp(-pow((p - 0.40) / 0.17, 2.0));
+    float settle = smoothstep(0.24, 0.86, p);
+
+    vec3 pos = mix(position, aTarget, settle);
+
+    vec3 seed = position * 0.5 + uTime * 0.05;
+    vec3 dir = normalize(vec3(
+      noise3(seed) - 0.5,
+      noise3(seed.yzx + 11.3) - 0.5,
+      noise3(seed.zxy + 27.1) - 0.5
+    ) + 1e-5);
+    // bias outward so it reads as one explosion rather than per-point noise
+    dir = normalize(mix(dir, normalize(position + vec3(0.0, 0.0, 6.0)), 0.45));
+
+    float scatter = mix(2.4, 0.85, aKeep);   // the page flies apart; he holds together
+    pos += dir * burst * scatter * (0.9 + aRand * 2.4);
+    pos += dir * (1.0 - aKeep) * settle * (5.0 + aRand * 9.0);
+
+    vec3 toM = pos - uMouse;
+    float d = length(toM.xy);
+    pos.xy += normalize(toM.xy + 1e-5) * smoothstep(10.0, 0.0, d) * 2.6;
+
+    pos.z += sin(uTime * 0.7 + aRand * 6.28) * 0.25 * settle;
+
+    vec4 mv = modelViewMatrix * vec4(pos, 1.0);
+    gl_Position = projectionMatrix * mv;
+    gl_PointSize = uSize * uDpr * (0.6 + aRand * 0.8) * (34.0 / -mv.z);
+
+    // 2022 was ink on paper; 2026 is light on dark, so weight carries the image
+    vec3  warm = mix(vec3(1.0, 0.93, 0.84), vec3(1.0, 0.46, 0.20), aRand * 0.6);
+    vec3  lin2022 = pow(aColor, vec3(2.2));
+    vec3  lin2026 = pow(warm, vec3(2.2)) * (0.12 + aWeight * 1.75);
+    vColor = mix(lin2022, lin2026, settle * 0.92);
+    vAlpha = mix(1.0, aKeep * (0.10 + aWeight * 1.25), settle)
+           * (0.30 + burst * 0.45 + settle * 0.75);
+  }
+`;
+
+const POINTS_FRAG = `
+  precision highp float;
+  varying vec3 vColor; varying float vAlpha;
+  void main() {
+    vec2 uv = gl_PointCoord - 0.5;
+    float d = dot(uv, uv);
+    if (d > 0.25) discard;
+    gl_FragColor = vec4(vColor, smoothstep(0.25, 0.01, d) * vAlpha);
+  }
+`;
+
+const COMP_VERT = `
+  varying vec2 vUv;
+  void main(){ vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }
+`;
+
+/* The composite. The key idea: a noise field decides WHICH pixels have already
+   flipped from 2022 to 2026. All the violence lives in the narrow band at that
+   moving boundary — never across the whole frame. */
+const COMP_FRAG = `
+  precision highp float;
+  #define SAMPLES ${SAMPLES}
+  uniform sampler2D tSceneA, tSceneB;
+  uniform float uProgress, uTime;
+  uniform vec2  uMouseUv, uMouseVel;
+  varying vec2  vUv;
+  ${NOISE}
+
+  void main() {
+    float p = uProgress;
+
+    // organic erosion mask, biased so the change sweeps top -> bottom
+    float m = noise2(vUv * vec2(3.2, 2.1) + vec2(uTime * 0.012, 0.0)) * 0.62
+            + noise2(vUv * vec2(9.0, 6.2) - vec2(uTime * 0.02, 0.0)) * 0.38;
+    // Heavily biased downward: 2022 is white and 2026 is black, so an island-forming
+    // mask leaves blown-out patches stranded in the dark. A wavy front that sweeps
+    // top to bottom never strands anything.
+    m = m * 0.34 + (1.0 - vUv.y) * 0.66;
+
+    float th   = p * 1.34 - 0.17;
+    float keepA = smoothstep(th - 0.085, th + 0.085, m);  // 1 = still 2022
+    float band  = 1.0 - abs(keepA - 0.5) * 2.0;          // peaks exactly at the front
+
+    float velLen = length(uMouseVel);
+    bool  atFront    = band > 0.02;
+    bool  mouseMoving = velLen > 0.0001;
+
+    vec2 uv = vUv, blurVec = vec2(0.0), split = vec2(0.0);
+    float mask = 0.0;
+
+    if (mouseMoving) {
+      vec2 trail = uMouseUv - uMouseVel * 4.0;
+      mask = smoothstep(0.24, 0.0, distance(vUv, trail));
+      uv      -= uMouseVel * mask * 1.3;
+      blurVec  = uMouseVel * mask * 6.0;
+      split   += uMouseVel * mask * 3.4;
+    }
+
+    if (atFront) {
+      float n = smoothstep(0.32, 0.72,
+          noise2(vec2(vUv.x *  40.0, uTime * 0.2)) * 0.4
+        + noise2(vec2(vUv.x * 150.0, uTime * 0.4)) * 0.4
+        + noise2(vec2(vUv.x * 400.0, uTime * 0.6)) * 0.2);
+
+      float f = band * n;
+      uv.y = (uv.y - 0.5) * exp(-f * 1.15) + 0.5 - f * 0.045;
+      uv.x += sin(vUv.y * 70.0 + uTime * 3.0) * f * 0.010;
+      split += vec2(f * 0.042, f * 0.011);
+      blurVec += vec2(0.0, f * 0.011);
+    }
+
+    vec3 A = vec3(0.0), B = vec3(0.0);
+    bool heavy = atFront || (mouseMoving && mask > 0.001);
+
+    if (heavy) {                                   // slow path, only where it shows
+      for (int i = 0; i < SAMPLES; i++) {
+        float o = (float(i) / float(SAMPLES - 1)) - 0.5;
+        vec2 s = uv + blurVec * o;
+        vec2 r = clamp(s + split, 0.0, 1.0);
+        vec2 g = clamp(s,         0.0, 1.0);
+        vec2 b = clamp(s - split, 0.0, 1.0);
+        A += vec3(texture2D(tSceneA, r).r, texture2D(tSceneA, g).g, texture2D(tSceneA, b).b);
+        if (p > 0.0) B += vec3(texture2D(tSceneB, r).r, texture2D(tSceneB, g).g, texture2D(tSceneB, b).b);
+      }
+      A /= float(SAMPLES);
+      if (p > 0.0) B /= float(SAMPLES);
+    } else {
+      A = texture2D(tSceneA, uv).rgb;              // fast path
+      if (p > 0.0) B = texture2D(tSceneB, uv).rgb;
+    }
+
+    // 2022 is white paper, so any smear of it blooms. Burn it down at the front
+    // and dim what is left as the page dies, instead of letting it glow.
+    A *= (1.0 - 0.62 * band) * (1.0 - 0.45 * smoothstep(0.35, 0.95, p));
+
+    vec3 col = mix(B, A, keepA);
+
+    // a thin hot line riding the erosion front
+    col += vec3(1.0, 0.42, 0.16) * smoothstep(0.72, 1.0, band) * 0.30;
+    col += (hash(vUv + uTime) - 0.5) * (0.012 + band * 0.055);
+
+    gl_FragColor = vec4(col, 1.0);
+  }
+`;
+
+/* ============================================================================
+   3. BOOT
+   ========================================================================== */
+const canvas = document.getElementById('gl');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, powerPreference: 'high-performance' });
+renderer.setPixelRatio(DPR);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+const rtOpts = { type: THREE.UnsignedByteType, colorSpace: THREE.SRGBColorSpace };
+const rtA = new THREE.WebGLRenderTarget(1, 1, rtOpts);
+const rtB = new THREE.WebGLRenderTarget(1, 1, rtOpts);
+
+const sceneA = new THREE.Scene();
+sceneA.background = new THREE.Color('#ffffff');   // letterbox is the page's own paper
+const camA   = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+
+const sceneB = new THREE.Scene();
+sceneB.background = new THREE.Color('#08080a');
+const sceneBContent = new THREE.Group();   // scaled to fit rather than backing the camera off
+sceneB.add(sceneBContent);
+const camB = new THREE.PerspectiveCamera(42, 1, 0.1, 400);
+camB.position.set(0, 0, 46);
+
+const quadScene = new THREE.Scene();
+const quadCam   = new THREE.Camera();
+
+const compMat = new THREE.ShaderMaterial({
+  vertexShader: COMP_VERT, fragmentShader: COMP_FRAG, depthTest: false, depthWrite: false,
+  uniforms: {
+    tSceneA:   { value: rtA.texture },
+    tSceneB:   { value: rtB.texture },
+    uProgress: { value: 0 },
+    uTime:     { value: 0 },
+    uMouseUv:  { value: new THREE.Vector2(0.5, 0.5) },
+    uMouseVel: { value: new THREE.Vector2(0, 0) },
+  },
+});
+quadScene.add(new THREE.Mesh(new THREE.PlaneGeometry(2, 2), compMat));
+
+let pointsMat = null;
+
+function buildScenes(portrait) {
+  const { canvas: pageCanvas, ctx, portraitCircle, portraitData, portraitSize } = drawArchivePage(portrait);
+
+  const pageTex = new THREE.CanvasTexture(pageCanvas);
+  pageTex.colorSpace = THREE.SRGBColorSpace;
+  pageTex.minFilter = THREE.LinearFilter;
+  const planeA = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), new THREE.MeshBasicMaterial({ map: pageTex }));
+  planeA.material.toneMapped = false;
+  sceneA.add(planeA);
+
+  const img = ctx.getImageData(0, 0, PAGE_W, PAGE_H).data;
+  const WORLD_W = 46, WORLD_H = WORLD_W * PAGE_H / PAGE_W;
+  const { cx, cy, r: pr } = portraitCircle;
+
+  const CAP = 260000;
+  const pos = new Float32Array(CAP * 3), tgt = new Float32Array(CAP * 3), col = new Float32Array(CAP * 3);
+  const rnd = new Float32Array(CAP), keep = new Float32Array(CAP), wgt = new Float32Array(CAP);
+  let k = 0;
+
+  const worldX = (sx) => (sx / PAGE_W - 0.5) * WORLD_W;
+  const worldY = (sy) => -(sy / PAGE_H - 0.5) * WORLD_H;
+  /* Scene B samples the portrait in colour. The studio wall is neutral and light;
+     skin carries chroma and hair carries darkness. Those two tests separate him
+     from the background where a brightness cut alone cannot — in the desaturated
+     2022 render his forehead and the wall are the same grey. */
+  const PS = portraitSize, px0 = cx - pr, py0 = cy - pr;
+
+  const wallLum = (() => {
+    const ring = [];
+    for (let a = 0; a < 360; a += 2) {
+      const lx = Math.floor(PS / 2 + Math.cos(a * Math.PI / 180) * (PS / 2) * 0.94);
+      const ly = Math.floor(PS / 2 + Math.sin(a * Math.PI / 180) * (PS / 2) * 0.94);
+      const o = (ly * PS + lx) * 4;
+      ring.push((0.299 * portraitData[o] + 0.587 * portraitData[o + 1] + 0.114 * portraitData[o + 2]) / 255);
+    }
+    ring.sort((a, b) => a - b);
+    return ring[Math.floor(ring.length * 0.5)];
+  })();
+
+  /** Colour-samples the portrait. Returns null when the pixel is background wall. */
+  function sampleSubject(sx, sy) {
+    const lx = Math.floor((sx - px0) / (2 * pr) * PS);
+    const ly = Math.floor((sy - py0) / (2 * pr) * PS);
+    if (lx < 0 || ly < 0 || lx >= PS || ly >= PS) return null;
+    const o = (ly * PS + lx) * 4;
+    const r = portraitData[o] / 255, g = portraitData[o + 1] / 255, b = portraitData[o + 2] / 255;
+    const lum = 0.299 * r + 0.587 * g + 0.114 * b;
+    const chroma = Math.max(r, g, b) - Math.min(r, g, b);
+    return (chroma > 0.055 || lum < wallLum - 0.10) ? { r, g, b, lum } : null;
+  }
+
+  function write(sx, sy, r, g, b, target, isKeep, weight) {
+    const i3 = k * 3;
+    pos[i3] = worldX(sx); pos[i3 + 1] = worldY(sy); pos[i3 + 2] = 0;
+    col[i3] = r; col[i3 + 1] = g; col[i3 + 2] = b;
+    tgt[i3] = target[0]; tgt[i3 + 1] = target[1]; tgt[i3 + 2] = target[2];
+    keep[k] = isKeep; wgt[k] = weight; rnd[k] = Math.random();
+    k++;
+  }
+
+  // pass 1 — the page. Blank paper contributes nothing; it is what 2026 has less of.
+  const COLS = Math.round(620 * QUALITY), ROWS = Math.round(COLS * PAGE_H / PAGE_W);
+  for (let j = 0; j < ROWS; j++) {
+    for (let i = 0; i < COLS; i++) {
+      const sx = (i + 0.5) * PAGE_W / COLS, sy = (j + 0.5) * PAGE_H / ROWS;
+      if (Math.hypot(sx - cx, sy - cy) < pr) continue;   // portrait gets its own pass
+      const o = (Math.floor(sy) * PAGE_W + Math.floor(sx)) * 4;
+      const r = img[o] / 255, g = img[o + 1] / 255, b = img[o + 2] / 255;
+      const lum = 0.299 * r + 0.587 * g + 0.114 * b;
+      if (lum > 0.92) continue;
+      write(sx, sy, r, g, b, [worldX(sx) * 2.1, worldY(sy) * 2.1, -26.0], 0, 1 - lum);
+    }
+  }
+
+  // pass 2 — him, dense. These are the points that survive into 2026.
+  const PN = Math.round(240 * Math.max(0.8, QUALITY));   // he is the hero; keep him dense
+  const samples = [];
+  for (let j = 0; j < PN; j++) {
+    for (let i = 0; i < PN; i++) {
+      const sx = px0 + (i + 0.5) * (2 * pr) / PN;
+      const sy = py0 + (j + 0.5) * (2 * pr) / PN;
+      if (Math.hypot(sx - cx, sy - cy) >= pr) continue;
+      const s = sampleSubject(sx, sy);
+      if (s) samples.push({ sx, sy, ...s });
+    }
+  }
+
+  // His face occupies a narrow slice of the 0..1 range, so raw luminance renders
+  // as an undifferentiated mass. Stretch that slice to full contrast instead.
+  const sorted = samples.map(s => s.lum).sort((a, b) => a - b);
+  const lo = sorted[Math.floor(sorted.length * 0.04)];
+  const hi = sorted[Math.floor(sorted.length * 0.97)];
+  const tone = (lum) => Math.pow(Math.min(1, Math.max(0, (lum - lo) / (hi - lo))), 1.55);
+
+  for (const s of samples) {
+    const nx = (s.sx - cx) / pr, ny = (s.sy - cy) / pr;
+    const t = tone(s.lum);
+    write(s.sx, s.sy, s.r, s.g, s.b,
+          [nx * 17.0, -ny * 17.0, (t - 0.42) * 11.0],   // lit planes come forward
+          1, 0.05 + 0.95 * t);
+  }
+
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.BufferAttribute(pos.slice(0, k * 3), 3));
+  geo.setAttribute('aTarget',  new THREE.BufferAttribute(tgt.slice(0, k * 3), 3));
+  geo.setAttribute('aColor',   new THREE.BufferAttribute(col.slice(0, k * 3), 3));
+  geo.setAttribute('aRand',    new THREE.BufferAttribute(rnd.slice(0, k), 1));
+  geo.setAttribute('aKeep',    new THREE.BufferAttribute(keep.slice(0, k), 1));
+  geo.setAttribute('aWeight',  new THREE.BufferAttribute(wgt.slice(0, k), 1));
+
+  pointsMat = new THREE.ShaderMaterial({
+    vertexShader: POINTS_VERT, fragmentShader: POINTS_FRAG,
+    transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+    uniforms: {
+      uTime: { value: 0 }, uProgress: { value: 0 },
+      uSize: { value: 2.6 }, uDpr: { value: DPR },
+      uMouse: { value: new THREE.Vector3(999, 999, 0) },
+    },
+  });
+  sceneBContent.add(new THREE.Points(geo, pointsMat));
+  buildText();
+  console.info(`[spike] ${k.toLocaleString()} particles sampled from the 2022 page`);
+}
+
+/* Type lives inside the WebGL scene, not in a DOM layer above it — troika renders
+   it from a signed distance field so it stays crisp at any camera distance. */
+const sceneText = [];
+function buildText() {
+  const head = new Text();
+  head.text = 'Preserved, not inflated.';
+  head.fontSize = 2.7;
+  head.anchorX = 'center'; head.anchorY = 'middle';
+  head.position.set(0, -23, 0);
+  head.color = 0xfff1e4;
+  head.fillOpacity = 0;
+  head.sync();
+
+  const mark = new Text();
+  mark.text = 'LIEL BEN-OR';
+  mark.fontSize = 0.92;
+  mark.letterSpacing = 0.34;
+  mark.anchorX = 'center'; mark.anchorY = 'middle';
+  mark.position.set(0, -27.4, 0);
+  mark.color = 0xff6a3d;
+  mark.fillOpacity = 0;
+  mark.sync();
+
+  for (const t of [head, mark]) {
+    t.material.toneMapped = false;
+    t.material.depthWrite = false;
+    sceneBContent.add(t);
+    sceneText.push(t);
+  }
+}
+
+/* --- scroll -> one scalar, smoothed by hand (no plugin, exact control) ----- */
+let targetP = 0, smoothP = 0;
+function readScroll() {
+  const max = document.documentElement.scrollHeight - innerHeight;
+  targetP = max > 0 ? Math.min(1, Math.max(0, scrollY / max)) : 0;
+}
+addEventListener('scroll', readScroll, { passive: true });
+
+// lets a capture pin uProgress instead of waiting on the smoothing to converge
+window.__spike = { set(v) { targetP = smoothP = v; } };
+
+/* --- pointer --------------------------------------------------------------- */
+const mouseUv = new THREE.Vector2(0.5, 0.5);
+const prevUv  = new THREE.Vector2(0.5, 0.5);
+const velUv   = new THREE.Vector2(0, 0);
+let pointerSeen = false;
+addEventListener('pointermove', (e) => {
+  pointerSeen = true;
+  mouseUv.set(e.clientX / innerWidth, 1 - e.clientY / innerHeight);
+}, { passive: true });
+
+/* --- resize ---------------------------------------------------------------- */
+let camBaseZ = 46;
+function resize() {
+  const w = innerWidth, h = innerHeight;
+  renderer.setSize(w, h, false);
+  rtA.setSize(Math.round(w * DPR), Math.round(h * DPR));
+  rtB.setSize(Math.round(w * DPR), Math.round(h * DPR));
+  camB.aspect = w / h; camB.updateProjectionMatrix();
+
+  // Frame vertically with the camera, and fit narrow viewports by shrinking the
+  // content — backing the camera off instead would leave a phone a distant speck.
+  const need = 24, tanHalf = Math.tan((camB.fov * Math.PI / 180) / 2);
+  camBaseZ = Math.max(46, need / tanHalf);
+  sceneBContent.scale.setScalar(Math.min(1, Math.max(0.5, camB.aspect / 0.85)));
+
+  // Always show the page's full width. On a phone that letterboxes into white
+  // instead of cropping the hero down to an unreadable sliver.
+  const planeA = sceneA.children[0];
+  if (planeA) planeA.scale.set(1, (w / h) / (PAGE_W / PAGE_H), 1);
+  readScroll();
+}
+addEventListener('resize', resize);
+
+/* --- loop ------------------------------------------------------------------ */
+const clock = new THREE.Clock();
+const eraA = document.getElementById('era-a');
+const eraB = document.getElementById('era-b');
+const readout = document.getElementById('readout');
+const hint = document.getElementById('hint');
+
+function frame() {
+  requestAnimationFrame(frame);
+  const t = clock.getElapsedTime();
+
+  smoothP += (targetP - smoothP) * (reduced ? 1 : 0.085);   // the scrub feel
+  const p = smoothP;
+
+  velUv.x += ((mouseUv.x - prevUv.x) - velUv.x) * 0.05;     // liquid lag
+  velUv.y += ((mouseUv.y - prevUv.y) - velUv.y) * 0.05;
+  prevUv.copy(mouseUv);
+
+  if (pointsMat) {
+    pointsMat.uniforms.uTime.value = t;
+    pointsMat.uniforms.uProgress.value = p;
+    // before the pointer has moved it would otherwise sit at world origin and
+    // push a hole straight through the middle of the portrait
+    if (pointerSeen) {
+      pointsMat.uniforms.uMouse.value.set(
+        (mouseUv.x - 0.5) * 46,
+        (mouseUv.y - 0.5) * 46 * (innerHeight / innerWidth),
+        0
+      );
+    }
+  }
+
+  camB.position.x = Math.sin(t * 0.13) * 1.6;
+  camB.position.y = -6 + Math.cos(t * 0.10) * 1.1;
+  camB.position.z = camBaseZ;
+  camB.lookAt(0, -6, 0);
+
+  // the type arrives only once he has finished reassembling
+  const fade = Math.round(THREE.MathUtils.smoothstep(p, 0.80, 0.96) * 40) / 40;
+  for (const tx of sceneText) {
+    if (tx.fillOpacity !== fade) { tx.fillOpacity = fade; tx.sync(); }
+  }
+
+  renderer.setRenderTarget(rtA);
+  renderer.render(sceneA, camA);
+
+  if (p > 0.001) {                               // scene B never renders until needed
+    renderer.setRenderTarget(rtB);
+    renderer.render(sceneB, camB);
+  }
+
+  renderer.setRenderTarget(null);
+  compMat.uniforms.uProgress.value = p;
+  compMat.uniforms.uTime.value = t;
+  compMat.uniforms.uMouseUv.value.copy(mouseUv);
+  compMat.uniforms.uMouseVel.value.copy(velUv);
+  renderer.render(quadScene, quadCam);
+
+  readout.textContent = 'uProgress ' + p.toFixed(3);
+  eraA.classList.toggle('era--dim', p > 0.5);
+  eraB.classList.toggle('era--dim', p <= 0.5);
+  hint.style.opacity = p > 0.02 ? '0' : '1';
+}
+
+/* --- go -------------------------------------------------------------------- */
+new THREE.ImageLoader().setCrossOrigin('anonymous').load(PORTRAIT_SRC, (portrait) => {
+  let booted = false;
+  const boot = () => {
+    if (booted) return;
+    booted = true;
+    buildScenes(portrait);
+    resize();
+    document.getElementById('loading').classList.add('done');
+    frame();
+  };
+  // warm the SDF atlas so the type does not pop in, but never block boot on it
+  setTimeout(boot, 2500);
+  preloadFont({ characters: 'Preserved, not inflated.LIEL BEN-OR' }, boot);
+}, undefined, () => {
+  document.getElementById('loading').textContent = 'failed to load ' + PORTRAIT_SRC;
+});
+</script>
+</body>
+</html>
