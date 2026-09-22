@@ -1,220 +1,170 @@
-/* ==========================================================================
-   Torn page interactions
-   - Default: 50/50 split with neutral center zone
-   - Hover left/right: reveal that side style across whole page
-   ========================================================================== */
+const projects = {
+  operations: {
+    title: "Betec",
+    category: "Brand & web experience",
+    description:
+      "A Hebrew-first website presenting Betec’s engineering services, digital products, and selected work.",
+    image: "workflow-platform.png",
+    alt: "Betec business workflow interface",
+  },
+  discovery: {
+    title: "Geographic Discovery",
+    category: "Research & automation",
+    description:
+      "A map-first research workspace that transforms a search area into an actionable business dataset.",
+    image: "business-discovery.png",
+    alt: "Map and business results in Geographic Discovery",
+  },
+  vehicle: {
+    title: "Interactive Vehicle Studio",
+    category: "Product experiences",
+    description:
+      "A responsive product viewer that gives customers a fluid, detailed look from every angle.",
+    image: "vehicle-viewer.png",
+    alt: "Interactive vehicle presentation with multiple viewing angles",
+  },
+  data: {
+    title: "Structured Data Workbench",
+    category: "Developer tools",
+    description:
+      "A focused browser tool for inspecting, comparing and reshaping complex data contracts.",
+    image: "data-workbench.png",
+    alt: "Data contract inspection and transformation interface",
+  },
+};
+const chapters = [...document.querySelectorAll(".chapter")];
+const chapterLinks = [...document.querySelectorAll(".chapter-navigation a")];
+const work = document.querySelector("#work");
+const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+const motionButton = document.querySelector("#motion-control");
+let paused = reducedMotion.matches,
+  world = null,
+  scrollFrame = 0;
 
-(function () {
-  "use strict";
-
-  var wrapper = document.getElementById("prototype-wrapper");
-  if (!wrapper) {
-    return;
-  }
-
-  var container = document.getElementById("prototype-container");
-  var layerOld = wrapper.querySelector(".layer-old");
-  var layerNew = wrapper.querySelector(".layer-new");
-  var neutralZone = wrapper.querySelector(".neutral-zone");
-  var activeSide = "";
-  var pinnedSide = "";
-  var isMobile = window.matchMedia("(max-width: 900px)").matches;
-  var hasHover = window.matchMedia("(hover: hover)").matches;
-  var neutralZoneHalfWidth = 110;
-  var navToggles = document.querySelectorAll(".nav-toggle");
-  var navLinks = document.querySelectorAll(".nav__link");
-  var pinLeft = document.getElementById("pin-left");
-  var pinRight = document.getElementById("pin-right");
-
-  function updateNeutralZoneWidth() {
-    var rootStyles = window.getComputedStyle(document.documentElement);
-    var configured = parseInt(rootStyles.getPropertyValue("--neutral-zone-width"), 10);
-    if (!Number.isNaN(configured) && configured > 0) {
-      neutralZoneHalfWidth = Math.round(configured / 2);
-    } else {
-      neutralZoneHalfWidth = 110;
-    }
-  }
-
-  function sideFromX(x) {
-    var mid = window.innerWidth / 2;
-    if (Math.abs(x - mid) <= neutralZoneHalfWidth) {
-      return "center";
-    }
-    return x < window.innerWidth / 2 ? "left" : "right";
-  }
-
-  function clearState() {
-    activeSide = "";
-    wrapper.classList.remove("hover-left", "hover-right", "hover-center");
-  }
-
-  function syncContainerHeight() {
-    if (!container || !layerOld || !layerNew) {
-      return;
-    }
-
-    var oldHeight = layerOld.scrollHeight;
-    var newHeight = layerNew.scrollHeight;
-    container.style.height = Math.max(oldHeight, newHeight) + "px";
-  }
-
-  function setSide(side) {
-    if (isMobile || !hasHover) {
-      clearState();
-      return;
-    }
-
-    if (pinnedSide) {
-      return;
-    }
-
-    if (side === activeSide) {
-      return;
-    }
-
-    activeSide = side;
-    wrapper.classList.toggle("hover-left", side === "left");
-    wrapper.classList.toggle("hover-right", side === "right");
-    wrapper.classList.toggle("hover-center", side === "center");
-  }
-
-  function pinSide(side) {
-    if (pinnedSide === side) {
-      pinnedSide = "";
-      pinLeft.classList.remove("pinned");
-      pinRight.classList.remove("pinned");
-      return;
-    }
-
-    pinnedSide = side;
-    pinLeft.classList.toggle("pinned", side === "left");
-    pinRight.classList.toggle("pinned", side === "right");
-
-    activeSide = side;
-    wrapper.classList.toggle("hover-left", side === "left");
-    wrapper.classList.toggle("hover-right", side === "right");
-    wrapper.classList.remove("hover-center");
-  }
-
-  function onPointerMove(event) {
-    if (isMobile || !hasHover) {
-      return;
-    }
-
-    if (event.pointerType && event.pointerType !== "mouse" && event.pointerType !== "pen") {
-      return;
-    }
-
-    setSide(sideFromX(event.clientX));
-  }
-
-  function onResize() {
-    isMobile = window.matchMedia("(max-width: 900px)").matches;
-    hasHover = window.matchMedia("(hover: hover)").matches;
-    updateNeutralZoneWidth();
-    syncContainerHeight();
-    if (isMobile || !hasHover) {
-      pinnedSide = "";
-      pinLeft && pinLeft.classList.remove("pinned");
-      pinRight && pinRight.classList.remove("pinned");
-      clearState();
-    }
-  }
-
-  function onTouchStart(event) {
-    if (!isMobile) {
-      return;
-    }
-
-    var touch = event.touches && event.touches[0];
-    if (!touch) {
-      return;
-    }
-
-    setSide(sideFromX(touch.clientX));
-  }
-
-  function onTouchEnd() {
-    if (isMobile) {
-      clearState();
-    }
-  }
-
-  window.addEventListener("pointermove", onPointerMove);
-  window.addEventListener("resize", onResize);
-  window.addEventListener("blur", clearState);
-  window.addEventListener("load", syncContainerHeight);
-
-  wrapper.addEventListener("touchstart", onTouchStart, { passive: true });
-  wrapper.addEventListener("touchend", onTouchEnd, { passive: true });
-  wrapper.addEventListener("touchcancel", onTouchEnd, { passive: true });
-
-  navToggles.forEach(function (button) {
-    button.addEventListener("click", function () {
-      document.body.classList.toggle("nav-open");
-    });
+/** Maps ordinary document scrolling to a reversible journey through the world. */
+function updateJourney() {
+  scrollFrame = 0;
+  const end = work.offsetTop - innerHeight * 0.65;
+  const progress = Math.max(0, Math.min(1, scrollY / end));
+  world?.setProgress(progress);
+  document.querySelector("#journey-progress").style.transform =
+    `scaleX(${progress})`;
+  document.body.classList.toggle(
+    "at-work",
+    scrollY > work.offsetTop - innerHeight * 0.4,
+  );
+  let active = 0;
+  chapters.forEach((chapter, index) => {
+    const local = scrollY - chapter.offsetTop;
+    if (local > -innerHeight * 0.45) active = index;
+    const copy = chapter.querySelector(".chapter-copy");
+    const enter =
+      index === 0
+        ? 1
+        : Math.max(
+            0,
+            Math.min(1, (local + innerHeight * 0.65) / (innerHeight * 0.45)),
+          );
+    const exit = Math.max(
+      0,
+      Math.min(
+        1,
+        (chapter.offsetHeight - innerHeight * 0.4 - local) /
+          (innerHeight * 0.6),
+      ),
+    );
+    copy.style.opacity = enter * exit;
+    copy.style.transform = reducedMotion.matches
+      ? "none"
+      : `translateY(${(1 - enter) * 32 - (1 - exit) * 24}px)`;
   });
-
-  navLinks.forEach(function (link) {
-    link.addEventListener("click", function () {
-      document.body.classList.remove("nav-open");
-    });
+  chapterLinks.forEach((link, index) => {
+    if (index === active) link.setAttribute("aria-current", "step");
+    else link.removeAttribute("aria-current");
   });
+}
+function queueScroll() {
+  if (!scrollFrame) scrollFrame = requestAnimationFrame(updateJourney);
+}
+function updateMotion() {
+  motionButton.setAttribute("aria-pressed", String(paused));
+  motionButton.innerHTML = `<span aria-hidden="true">${paused ? "▷" : "Ⅱ"}</span><span>${paused ? "Resume motion" : "Pause motion"}</span>`;
+  world?.setReducedMotion(reducedMotion.matches);
+  world?.setPaused(paused);
+}
+motionButton.addEventListener("click", () => {
+  paused = !paused;
+  updateMotion();
+});
+reducedMotion.addEventListener("change", () => {
+  paused = reducedMotion.matches;
+  updateMotion();
+});
+window.addEventListener("scroll", queueScroll, { passive: true });
+window.addEventListener("resize", queueScroll);
 
-  if (pinLeft) {
-    pinLeft.addEventListener("click", function (event) {
-      event.stopPropagation();
-      pinSide("left");
-    });
+/** The project details use native dialog focus handling and Escape dismissal. */
+const dialog = document.querySelector("#project-dialog");
+function openProject(id) {
+  const project = projects[id];
+  if (!project) return;
+  document.querySelector("#project-title").textContent = project.title;
+  document.querySelector("#project-category").textContent = project.category;
+  document.querySelector("#project-description").textContent =
+    project.description;
+  const image = document.querySelector("#project-image");
+  image.src = `/app-site/static/img/work/${project.image}`;
+  image.alt = project.alt;
+  dialog.showModal();
+  document.body.style.overflow = "hidden";
+  world?.setPaused(true);
+}
+document
+  .querySelectorAll("[data-project]")
+  .forEach((button) =>
+    button.addEventListener("click", () => openProject(button.dataset.project)),
+  );
+document
+  .querySelector(".dialog-close")
+  .addEventListener("click", () => dialog.close());
+dialog.addEventListener("click", (event) => {
+  if (event.target === dialog) {
+    const rect = dialog.getBoundingClientRect();
+    if (
+      event.clientX < rect.left ||
+      event.clientX > rect.right ||
+      event.clientY < rect.top ||
+      event.clientY > rect.bottom
+    )
+      dialog.close();
   }
+});
+dialog.addEventListener("close", () => {
+  document.body.style.overflow = "";
+  world?.setPaused(paused);
+});
+updateMotion();
+updateJourney();
 
-  if (pinRight) {
-    pinRight.addEventListener("click", function (event) {
-      event.stopPropagation();
-      pinSide("right");
+function fallback(error) {
+  console.warn("The 3D environment could not be displayed.", error);
+  document.body.classList.add("no-world");
+  document.querySelector("#world canvas")?.remove();
+  motionButton.hidden = true;
+}
+import("./world/world.js")
+  .then(({ createWorld }) => {
+    world = createWorld(document.querySelector("#world"), {
+      onReady: () => document.body.classList.add("world-ready"),
+      onError: fallback,
+      onProject: openProject,
+      projects: Object.entries(projects).map(([id, project]) => ({
+        id,
+        title: project.title,
+        image: `/app-site/static/img/work/${project.image}`,
+      })),
     });
-  }
-
-  document.addEventListener("keydown", function (event) {
-    if (event.key === "ArrowLeft") {
-      pinSide("left");
-    }
-
-    if (event.key === "ArrowRight") {
-      pinSide("right");
-    }
-
-    if (event.key === "Escape") {
-      pinnedSide = "";
-      pinLeft && pinLeft.classList.remove("pinned");
-      pinRight && pinRight.classList.remove("pinned");
-      clearState();
-    }
-  });
-
-  syncContainerHeight();
-  updateNeutralZoneWidth();
-  window.setTimeout(syncContainerHeight, 250);
-
-  var revealTargets = document.querySelectorAll(".layer-new [data-reveal]");
-
-  if (revealTargets.length > 0 && "IntersectionObserver" in window) {
-    var revealThreshold = window.matchMedia("(max-width: 900px)").matches ? 0.05 : 0.12;
-
-    var revealObserver = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("revealed");
-        } else {
-          entry.target.classList.remove("revealed");
-        }
-      });
-    }, { threshold: revealThreshold });
-
-    revealTargets.forEach(function (el) {
-      revealObserver.observe(el);
-    });
-  }
-
-})();
+    updateMotion();
+    updateJourney();
+  })
+  .catch(fallback);
